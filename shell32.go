@@ -522,11 +522,14 @@ func ShellExecute(hWnd HWND, verb *uint16, file *uint16, args *uint16, cwd *uint
 	return ret != 0
 }
 
-func Shell_NotifyIcon(dwMessage uint32, lpdata *NOTIFYICONDATA) bool {
-	ret, _, _ := syscall.Syscall(shell_NotifyIcon.Addr(), 2,
+func Shell_NotifyIcon(dwMessage uint32, lpdata *NOTIFYICONDATA) (err error) {
+	ret, _, e := syscall.Syscall(shell_NotifyIcon.Addr(), 2,
 		uintptr(dwMessage),
 		uintptr(unsafe.Pointer(lpdata)),
 		0)
 
-	return ret != 0
+	if ret == 0 {
+		err = windows.Errno(e)
+	}
+	return err
 }
