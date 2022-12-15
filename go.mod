@@ -1,5 +1,8 @@
 module github.com/tailscale/win
 
-go 1.12
+go 1.19
 
-require golang.org/x/sys v0.0.0-20201018230417-eeed37f84f13
+require (
+	github.com/dblohm7/wingoes v0.0.0-20230131214643-2b26ab7fb5f9
+	golang.org/x/sys v0.4.0
+)

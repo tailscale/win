@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package win
@@ -143,3 +144,11 @@ type MENUINFO struct {
 	DwContextHelpID uint32
 	DwMenuData      uintptr
 }
+
+// return codes for WM_MENUCHAR
+const (
+	MNC_IGNORE  = 0
+	MNC_CLOSE   = 1
+	MNC_EXECUTE = 2
+	MNC_SELECT  = 3
+)

@@ -2,16 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
+//go:generate go run golang.org/x/sys/windows/mkwinsyscall -output zuxtheme_windows.go uxtheme.go
+
 package win
-
-import (
-	"syscall"
-	"unsafe"
-
-	"golang.org/x/sys/windows"
-)
 
 // TMT property ids
 const (
@@ -421,6 +417,29 @@ const (
 	TREIS_HOTSELECTED      = 6
 )
 
+type BP_BUFFERFORMAT uint32
+
+const (
+	BPBF_COMPATIBLEBITMAP = BP_BUFFERFORMAT(0)
+	BPBF_DIB              = BP_BUFFERFORMAT(1)
+	BPBF_TOPDOWNDIB       = BP_BUFFERFORMAT(2)
+	BPBF_COMPOSITED       = BPBF_TOPDOWNDIB
+	BPBF_TOPDOWNMONODIB   = BP_BUFFERFORMAT(3)
+)
+
+const (
+	BPPF_ERASE     = 0x0001
+	BPPF_NOCLIP    = 0x0002
+	BPPF_NONCLIENT = 0x0004
+)
+
+type BP_PAINTPARAMS struct {
+	Size          uint32
+	Flags         uint32
+	ExcludeRect   *RECT
+	BlendFunction *BLENDFUNCTION
+}
+
 // DTTOPTS flags
 const (
 	DTT_TEXTCOLOR    = 1 << 0
@@ -452,16 +471,6 @@ const (
 		DTT_COMPOSITED
 )
 
-type HTHEME HANDLE
-
-type THEMESIZE int
-
-const (
-	TS_MIN THEMESIZE = iota
-	TS_TRUE
-	TS_DRAW
-)
-
 type DTTOPTS struct {
 	DwSize              uint32
 	DwFlags             uint32
@@ -480,142 +489,41 @@ type DTTOPTS struct {
 	LParam              uintptr
 }
 
-var (
-	// Library
-	libuxtheme *windows.LazyDLL
+type HTHEME HANDLE
 
-	// Functions
-	closeThemeData      *windows.LazyProc
-	drawThemeBackground *windows.LazyProc
-	drawThemeTextEx     *windows.LazyProc
-	getThemeColor       *windows.LazyProc
-	getThemePartSize    *windows.LazyProc
-	getThemeTextExtent  *windows.LazyProc
-	isAppThemed         *windows.LazyProc
-	openThemeData       *windows.LazyProc
-	setWindowTheme      *windows.LazyProc
+type THEMESIZE int
+
+const (
+	TS_MIN THEMESIZE = iota
+	TS_TRUE
+	TS_DRAW
 )
 
-func init() {
-	// Library
-	libuxtheme = windows.NewLazySystemDLL("uxtheme.dll")
+type HPAINTBUFFER HANDLE
 
-	// Functions
-	closeThemeData = libuxtheme.NewProc("CloseThemeData")
-	drawThemeBackground = libuxtheme.NewProc("DrawThemeBackground")
-	drawThemeTextEx = libuxtheme.NewProc("DrawThemeTextEx")
-	getThemeColor = libuxtheme.NewProc("GetThemeColor")
-	getThemePartSize = libuxtheme.NewProc("GetThemePartSize")
-	getThemeTextExtent = libuxtheme.NewProc("GetThemeTextExtent")
-	isAppThemed = libuxtheme.NewProc("IsAppThemed")
-	openThemeData = libuxtheme.NewProc("OpenThemeData")
-	setWindowTheme = libuxtheme.NewProc("SetWindowTheme")
+type MARGINS struct {
+	LeftWidth    int32
+	RightWidth   int32
+	TopHeight    int32
+	BottomHeight int32
 }
 
-func CloseThemeData(hTheme HTHEME) HRESULT {
-	ret, _, _ := syscall.Syscall(closeThemeData.Addr(), 1,
-		uintptr(hTheme),
-		0,
-		0)
-
-	return HRESULT(ret)
-}
-
-func DrawThemeBackground(hTheme HTHEME, hdc HDC, iPartId, iStateId int32, pRect, pClipRect *RECT) HRESULT {
-	ret, _, _ := syscall.Syscall6(drawThemeBackground.Addr(), 6,
-		uintptr(hTheme),
-		uintptr(hdc),
-		uintptr(iPartId),
-		uintptr(iStateId),
-		uintptr(unsafe.Pointer(pRect)),
-		uintptr(unsafe.Pointer(pClipRect)))
-
-	return HRESULT(ret)
-}
-
-func DrawThemeTextEx(hTheme HTHEME, hdc HDC, iPartId, iStateId int32, pszText *uint16, iCharCount int32, dwFlags uint32, pRect *RECT, pOptions *DTTOPTS) HRESULT {
-	if drawThemeTextEx.Find() != nil {
-		return HRESULT(0)
-	}
-	ret, _, _ := syscall.Syscall9(drawThemeTextEx.Addr(), 9,
-		uintptr(hTheme),
-		uintptr(hdc),
-		uintptr(iPartId),
-		uintptr(iStateId),
-		uintptr(unsafe.Pointer(pszText)),
-		uintptr(iCharCount),
-		uintptr(dwFlags),
-		uintptr(unsafe.Pointer(pRect)),
-		uintptr(unsafe.Pointer(pOptions)))
-
-	return HRESULT(ret)
-}
-
-func GetThemeColor(hTheme HTHEME, iPartId, iStateId, iPropId int32, pColor *COLORREF) HRESULT {
-	ret, _, _ := syscall.Syscall6(getThemeColor.Addr(), 5,
-		uintptr(hTheme),
-		uintptr(iPartId),
-		uintptr(iStateId),
-		uintptr(iPropId),
-		uintptr(unsafe.Pointer(pColor)),
-		0)
-
-	return HRESULT(ret)
-}
-
-func GetThemePartSize(hTheme HTHEME, hdc HDC, iPartId, iStateId int32, prc *RECT, eSize THEMESIZE, psz *SIZE) HRESULT {
-	ret, _, _ := syscall.Syscall9(getThemePartSize.Addr(), 7,
-		uintptr(hTheme),
-		uintptr(hdc),
-		uintptr(iPartId),
-		uintptr(iStateId),
-		uintptr(unsafe.Pointer(prc)),
-		uintptr(eSize),
-		uintptr(unsafe.Pointer(psz)),
-		0,
-		0)
-
-	return HRESULT(ret)
-}
-
-func GetThemeTextExtent(hTheme HTHEME, hdc HDC, iPartId, iStateId int32, pszText *uint16, iCharCount int32, dwTextFlags uint32, pBoundingRect, pExtentRect *RECT) HRESULT {
-	ret, _, _ := syscall.Syscall9(getThemeTextExtent.Addr(), 9,
-		uintptr(hTheme),
-		uintptr(hdc),
-		uintptr(iPartId),
-		uintptr(iStateId),
-		uintptr(unsafe.Pointer(pszText)),
-		uintptr(iCharCount),
-		uintptr(dwTextFlags),
-		uintptr(unsafe.Pointer(pBoundingRect)),
-		uintptr(unsafe.Pointer(pExtentRect)))
-
-	return HRESULT(ret)
-}
-
-func IsAppThemed() bool {
-	ret, _, _ := syscall.Syscall(isAppThemed.Addr(), 0,
-		0,
-		0,
-		0)
-
-	return ret != 0
-}
-
-func OpenThemeData(hwnd HWND, pszClassList *uint16) HTHEME {
-	ret, _, _ := syscall.Syscall(openThemeData.Addr(), 2,
-		uintptr(hwnd),
-		uintptr(unsafe.Pointer(pszClassList)),
-		0)
-
-	return HTHEME(ret)
-}
-
-func SetWindowTheme(hwnd HWND, pszSubAppName, pszSubIdList *uint16) HRESULT {
-	ret, _, _ := syscall.Syscall(setWindowTheme.Addr(), 3,
-		uintptr(hwnd),
-		uintptr(unsafe.Pointer(pszSubAppName)),
-		uintptr(unsafe.Pointer(pszSubIdList)))
-
-	return HRESULT(ret)
-}
+//sys BeginBufferedPaint(hdcTarget HDC, prcTarget *RECT, format BP_BUFFERFORMAT, paintParams *BP_PAINTPARAMS, phdc *HDC) (pb HPAINTBUFFER, err error) [failretval==0] = uxtheme.BeginBufferedPaint
+//sys BufferedPaintInit() (ret HRESULT) = uxtheme.BufferedPaintInit
+//sys CloseThemeData(hTheme HTHEME) (ret HRESULT) = uxtheme.CloseThemeData
+//sys DrawThemeBackground(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, pRect *RECT, pClipRect *RECT) (ret HRESULT) = uxtheme.DrawThemeBackground
+//sys DrawThemeParentBackground(hWnd HWND, hdc HDC, prc *RECT) (ret HRESULT) = uxtheme.DrawThemeParentBackground
+//sys DrawThemeTextEx(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, pszText *uint16, iCharCount int32, dwFlags uint32, pRect *RECT, pOptions *DTTOPTS) (ret HRESULT) = uxtheme.DrawThemeTextEx
+//sys EndBufferedPaint(paintBuf HPAINTBUFFER, updateTarget bool) (ret HRESULT) = uxtheme.EndBufferedPaint
+//sys GetThemeColor(hTheme HTHEME, iPartId int32, iStateId int32, iPropId int32, pColor *COLORREF) (ret HRESULT) = uxtheme.GetThemeColor
+//sys GetThemeFont(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, iPropId int32, pFont *LOGFONT) (ret HRESULT) = uxtheme.GetThemeFont
+//sys GetThemeInt(hTheme HTHEME, iPartId int32, iStateId int32, iPropId int32, piVal *int32) (ret HRESULT) = uxtheme.GetThemeInt
+//sys GetThemeMargins(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, iPropId int32, prc *RECT, pMargins *MARGINS) (ret HRESULT) = uxtheme.GetThemeMargins
+//sys GetThemeMetric(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, iPropId int32, piVal *int32) (ret HRESULT) = uxtheme.GetThemeMetric
+//sys GetThemePartSize(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, prc *RECT, eSize THEMESIZE, psz *SIZE) (ret HRESULT) = uxtheme.GetThemePartSize
+//sys GetThemeSysFont(hTheme HTHEME, iFontId int32, plf *LOGFONT) (ret HRESULT) = uxtheme.GetThemeSysFont
+//sys GetThemeTextExtent(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, pszText *uint16, iCharCount int32, dwTextFlags uint32, pBoundingRect *RECT, pExtentRect *RECT) (ret HRESULT) = uxtheme.GetThemeTextExtent
+//sys IsAppThemed() (ret bool) = uxtheme.IsAppThemed
+//sys IsThemeBackgroundPartiallyTransparent(hTheme HTHEME, iPartId int32, iStateId int32) (ret bool) = uxtheme.IsThemeBackgroundPartiallyTransparent
+//sys OpenThemeData(hwnd HWND, pszClassList *uint16) (ret HTHEME) = uxtheme.OpenThemeData
+//sys SetWindowTheme(hwnd HWND, pszSubAppName *uint16, pszSubIdList *uint16) (ret HRESULT) = uxtheme.SetWindowTheme
