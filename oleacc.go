@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package win
@@ -10,6 +11,14 @@ import (
 	"syscall"
 	"unsafe"
 )
+
+const MSAA_MENU_SIG = 0xAA0DF00D
+
+type MSAAMENUINFO struct {
+	MSAASignature  uint32
+	TextLenExclNul uint32
+	Text           *uint16
+}
 
 type AnnoScope int
 

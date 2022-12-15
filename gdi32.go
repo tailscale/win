@@ -897,6 +897,14 @@ type RECT struct {
 	Left, Top, Right, Bottom int32
 }
 
+func (r *RECT) Width() int32 {
+	return r.Right - r.Left
+}
+
+func (r *RECT) Height() int32 {
+	return r.Bottom - r.Top
+}
+
 type SIZE struct {
 	CX, CY int32
 }
