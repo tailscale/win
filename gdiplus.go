@@ -371,8 +371,10 @@ func GdipCreateFont(fontFamily *GpFontFamily, emSize float32, style FontStyle, u
 //sys GdipGetGenericFontFamilySerif(family **GpFontFamily) (ret GpStatus) = gdiplus.GdipGetGenericFontFamilySerif
 //sys GdipGetImageDimension(image *GpImage, width *float32, height *float32) (ret GpStatus) = gdiplus.GdipGetImageDimension
 //sys GdipGetImageGraphicsContext(image *GpImage, graphics **GpGraphics) (ret GpStatus) = gdiplus.GdipGetImageGraphicsContext
+//sys GdipGetImageHeight(image *GpImage, height *uint32) (ret GpStatus) = gdiplus.GdipGetImageHeight
 //sys GdipGetImageHorizontalResolution(image *GpImage, resolution *float32) (ret GpStatus) = gdiplus.GdipGetImageHorizontalResolution
 //sys GdipGetImageVerticalResolution(image *GpImage, resolution *float32) (ret GpStatus) = gdiplus.GdipGetImageVerticalResolution
+//sys GdipGetImageWidth(image *GpImage, width *uint32) (ret GpStatus) = gdiplus.GdipGetImageWidth
 //sys GdipGetCompositingMode(graphics *GpGraphics, compositingMode *CompositingMode) (ret GpStatus) = gdiplus.GdipGetCompositingMode
 //sys GdipGraphicsClear(graphics *GpGraphics, color ARGB) (ret GpStatus) = gdiplus.GdipGraphicsClear
 //sys GdiplusStartup(token *uintptr, input *GdiplusStartupInput, output *GdiplusStartupOutput) (ret GpStatus) = gdiplus.GdiplusStartup
