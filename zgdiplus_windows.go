@@ -70,8 +70,10 @@ var (
 	procGdipGetGenericFontFamilySerif     = modgdiplus.NewProc("GdipGetGenericFontFamilySerif")
 	procGdipGetImageDimension             = modgdiplus.NewProc("GdipGetImageDimension")
 	procGdipGetImageGraphicsContext       = modgdiplus.NewProc("GdipGetImageGraphicsContext")
+	procGdipGetImageHeight                = modgdiplus.NewProc("GdipGetImageHeight")
 	procGdipGetImageHorizontalResolution  = modgdiplus.NewProc("GdipGetImageHorizontalResolution")
 	procGdipGetImageVerticalResolution    = modgdiplus.NewProc("GdipGetImageVerticalResolution")
+	procGdipGetImageWidth                 = modgdiplus.NewProc("GdipGetImageWidth")
 	procGdipGraphicsClear                 = modgdiplus.NewProc("GdipGraphicsClear")
 	procGdipResetClip                     = modgdiplus.NewProc("GdipResetClip")
 	procGdipSetClipPath                   = modgdiplus.NewProc("GdipSetClipPath")
@@ -260,6 +262,12 @@ func GdipGetImageGraphicsContext(image *GpImage, graphics **GpGraphics) (ret GpS
 	return
 }
 
+func GdipGetImageHeight(image *GpImage, height *uint32) (ret GpStatus) {
+	r0, _, _ := syscall.Syscall(procGdipGetImageHeight.Addr(), 2, uintptr(unsafe.Pointer(image)), uintptr(unsafe.Pointer(height)), 0)
+	ret = GpStatus(r0)
+	return
+}
+
 func GdipGetImageHorizontalResolution(image *GpImage, resolution *float32) (ret GpStatus) {
 	r0, _, _ := syscall.Syscall(procGdipGetImageHorizontalResolution.Addr(), 2, uintptr(unsafe.Pointer(image)), uintptr(unsafe.Pointer(resolution)), 0)
 	ret = GpStatus(r0)
@@ -268,6 +276,12 @@ func GdipGetImageHorizontalResolution(image *GpImage, resolution *float32) (ret 
 
 func GdipGetImageVerticalResolution(image *GpImage, resolution *float32) (ret GpStatus) {
 	r0, _, _ := syscall.Syscall(procGdipGetImageVerticalResolution.Addr(), 2, uintptr(unsafe.Pointer(image)), uintptr(unsafe.Pointer(resolution)), 0)
+	ret = GpStatus(r0)
+	return
+}
+
+func GdipGetImageWidth(image *GpImage, width *uint32) (ret GpStatus) {
+	r0, _, _ := syscall.Syscall(procGdipGetImageWidth.Addr(), 2, uintptr(unsafe.Pointer(image)), uintptr(unsafe.Pointer(width)), 0)
 	ret = GpStatus(r0)
 	return
 }
