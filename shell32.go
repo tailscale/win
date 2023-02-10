@@ -8,9 +8,10 @@
 package win
 
 import (
-	"golang.org/x/sys/windows"
 	"syscall"
 	"unsafe"
+
+	"golang.org/x/sys/windows"
 )
 
 type CSIDL uint32
@@ -314,6 +315,13 @@ type NOTIFYICONDATA struct {
 	HBalloonIcon     HICON
 }
 
+type NOTIFYICONIDENTIFIER struct {
+	CbSize   uint32
+	HWnd     HWND
+	UID      uint32
+	GuidItem syscall.GUID
+}
+
 type SHFILEINFO struct {
 	HIcon         HICON
 	IIcon         int32
@@ -346,20 +354,21 @@ var (
 	libshell32 *windows.LazyDLL
 
 	// Functions
-	dragAcceptFiles        *windows.LazyProc
-	dragFinish             *windows.LazyProc
-	dragQueryFile          *windows.LazyProc
-	extractIcon            *windows.LazyProc
-	shAppBarMessage        *windows.LazyProc
-	shBrowseForFolder      *windows.LazyProc
-	shDefExtractIcon       *windows.LazyProc
-	shGetFileInfo          *windows.LazyProc
-	shGetPathFromIDList    *windows.LazyProc
-	shGetSpecialFolderPath *windows.LazyProc
-	shParseDisplayName     *windows.LazyProc
-	shGetStockIconInfo     *windows.LazyProc
-	shellExecute           *windows.LazyProc
-	shell_NotifyIcon       *windows.LazyProc
+	dragAcceptFiles         *windows.LazyProc
+	dragFinish              *windows.LazyProc
+	dragQueryFile           *windows.LazyProc
+	extractIcon             *windows.LazyProc
+	shAppBarMessage         *windows.LazyProc
+	shBrowseForFolder       *windows.LazyProc
+	shDefExtractIcon        *windows.LazyProc
+	shGetFileInfo           *windows.LazyProc
+	shGetPathFromIDList     *windows.LazyProc
+	shGetSpecialFolderPath  *windows.LazyProc
+	shParseDisplayName      *windows.LazyProc
+	shGetStockIconInfo      *windows.LazyProc
+	shellExecute            *windows.LazyProc
+	shell_NotifyIcon        *windows.LazyProc
+	shell_NotifyIconGetRect *windows.LazyProc
 )
 
 func init() {
@@ -380,6 +389,7 @@ func init() {
 	shGetStockIconInfo = libshell32.NewProc("SHGetStockIconInfo")
 	shellExecute = libshell32.NewProc("ShellExecuteW")
 	shell_NotifyIcon = libshell32.NewProc("Shell_NotifyIconW")
+	shell_NotifyIconGetRect = libshell32.NewProc("Shell_NotifyIconGetRect")
 	shParseDisplayName = libshell32.NewProc("SHParseDisplayName")
 }
 
@@ -532,4 +542,12 @@ func Shell_NotifyIcon(dwMessage uint32, lpdata *NOTIFYICONDATA) (err error) {
 		err = windows.Errno(e)
 	}
 	return err
+}
+
+func Shell_NotifyIconGetRect(identifier *NOTIFYICONIDENTIFIER, iconLocation *RECT) HRESULT {
+	ret, _, _ := syscall.SyscallN(shell_NotifyIconGetRect.Addr(),
+		uintptr(unsafe.Pointer(identifier)),
+		uintptr(unsafe.Pointer(iconLocation)))
+
+	return HRESULT(ret)
 }
