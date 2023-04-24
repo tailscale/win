@@ -5,8 +5,6 @@
 //go:build windows
 // +build windows
 
-//go:generate go run golang.org/x/sys/windows/mkwinsyscall -output zuxtheme_windows.go uxtheme.go
-
 package win
 
 // TMT property ids
@@ -516,6 +514,7 @@ type MARGINS struct {
 //sys DrawThemeTextEx(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, pszText *uint16, iCharCount int32, dwFlags uint32, pRect *RECT, pOptions *DTTOPTS) (ret HRESULT) = uxtheme.DrawThemeTextEx
 //sys EndBufferedPaint(paintBuf HPAINTBUFFER, updateTarget bool) (ret HRESULT) = uxtheme.EndBufferedPaint
 //sys GetThemeColor(hTheme HTHEME, iPartId int32, iStateId int32, iPropId int32, pColor *COLORREF) (ret HRESULT) = uxtheme.GetThemeColor
+//sys GetThemeEnumValue(hTheme HTHEME, iPartId int32, iStateId int32, iPropId int32, piVal *int32) (ret HRESULT) = uxtheme.GetThemeEnumValue
 //sys GetThemeFont(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, iPropId int32, pFont *LOGFONT) (ret HRESULT) = uxtheme.GetThemeFont
 //sys GetThemeInt(hTheme HTHEME, iPartId int32, iStateId int32, iPropId int32, piVal *int32) (ret HRESULT) = uxtheme.GetThemeInt
 //sys GetThemeMargins(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, iPropId int32, prc *RECT, pMargins *MARGINS) (ret HRESULT) = uxtheme.GetThemeMargins

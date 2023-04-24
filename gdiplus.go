@@ -5,9 +5,6 @@
 //go:build windows
 // +build windows
 
-//go:generate go run golang.org/x/sys/windows/mkwinsyscall -output zgdiplus_windows.go gdiplus.go
-//go:generate go run golang.org/x/tools/cmd/goimports -w zgdiplus_windows.go
-
 package win
 
 import (

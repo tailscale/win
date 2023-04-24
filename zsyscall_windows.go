@@ -40,52 +40,73 @@ func errnoErr(e syscall.Errno) error {
 
 var (
 	modgdiplus = windows.NewLazySystemDLL("gdiplus.dll")
+	moduxtheme = windows.NewLazySystemDLL("uxtheme.dll")
 
-	procGdipAddPathEllipseI               = modgdiplus.NewProc("GdipAddPathEllipseI")
-	procGdipCreateBitmapFromFile          = modgdiplus.NewProc("GdipCreateBitmapFromFile")
-	procGdipCreateBitmapFromGraphics      = modgdiplus.NewProc("GdipCreateBitmapFromGraphics")
-	procGdipCreateBitmapFromHBITMAP       = modgdiplus.NewProc("GdipCreateBitmapFromHBITMAP")
-	procGdipCreateBitmapFromScan0         = modgdiplus.NewProc("GdipCreateBitmapFromScan0")
-	procGdipCreateBitmapFromStream        = modgdiplus.NewProc("GdipCreateBitmapFromStream")
-	procGdipCreateFontFamilyFromName      = modgdiplus.NewProc("GdipCreateFontFamilyFromName")
-	procGdipCreateFromHDC                 = modgdiplus.NewProc("GdipCreateFromHDC")
-	procGdipCreateHBITMAPFromBitmap       = modgdiplus.NewProc("GdipCreateHBITMAPFromBitmap")
-	procGdipCreatePath                    = modgdiplus.NewProc("GdipCreatePath")
-	procGdipCreateSolidFill               = modgdiplus.NewProc("GdipCreateSolidFill")
-	procGdipCreateStringFormat            = modgdiplus.NewProc("GdipCreateStringFormat")
-	procGdipDeleteBrush                   = modgdiplus.NewProc("GdipDeleteBrush")
-	procGdipDeleteFont                    = modgdiplus.NewProc("GdipDeleteFont")
-	procGdipDeleteFontFamily              = modgdiplus.NewProc("GdipDeleteFontFamily")
-	procGdipDeleteGraphics                = modgdiplus.NewProc("GdipDeleteGraphics")
-	procGdipDeletePath                    = modgdiplus.NewProc("GdipDeletePath")
-	procGdipDeleteStringFormat            = modgdiplus.NewProc("GdipDeleteStringFormat")
-	procGdipDisposeImage                  = modgdiplus.NewProc("GdipDisposeImage")
-	procGdipDrawImageRectI                = modgdiplus.NewProc("GdipDrawImageRectI")
-	procGdipDrawImageRectRectI            = modgdiplus.NewProc("GdipDrawImageRectRectI")
-	procGdipDrawString                    = modgdiplus.NewProc("GdipDrawString")
-	procGdipFillEllipseI                  = modgdiplus.NewProc("GdipFillEllipseI")
-	procGdipGetCompositingMode            = modgdiplus.NewProc("GdipGetCompositingMode")
-	procGdipGetGenericFontFamilyMonospace = modgdiplus.NewProc("GdipGetGenericFontFamilyMonospace")
-	procGdipGetGenericFontFamilySansSerif = modgdiplus.NewProc("GdipGetGenericFontFamilySansSerif")
-	procGdipGetGenericFontFamilySerif     = modgdiplus.NewProc("GdipGetGenericFontFamilySerif")
-	procGdipGetImageDimension             = modgdiplus.NewProc("GdipGetImageDimension")
-	procGdipGetImageGraphicsContext       = modgdiplus.NewProc("GdipGetImageGraphicsContext")
-	procGdipGetImageHeight                = modgdiplus.NewProc("GdipGetImageHeight")
-	procGdipGetImageHorizontalResolution  = modgdiplus.NewProc("GdipGetImageHorizontalResolution")
-	procGdipGetImageVerticalResolution    = modgdiplus.NewProc("GdipGetImageVerticalResolution")
-	procGdipGetImageWidth                 = modgdiplus.NewProc("GdipGetImageWidth")
-	procGdipGraphicsClear                 = modgdiplus.NewProc("GdipGraphicsClear")
-	procGdipResetClip                     = modgdiplus.NewProc("GdipResetClip")
-	procGdipSetClipPath                   = modgdiplus.NewProc("GdipSetClipPath")
-	procGdipSetCompositingMode            = modgdiplus.NewProc("GdipSetCompositingMode")
-	procGdipSetCompositingQuality         = modgdiplus.NewProc("GdipSetCompositingQuality")
-	procGdipSetInterpolationMode          = modgdiplus.NewProc("GdipSetInterpolationMode")
-	procGdipSetPixelOffsetMode            = modgdiplus.NewProc("GdipSetPixelOffsetMode")
-	procGdipSetSmoothingMode              = modgdiplus.NewProc("GdipSetSmoothingMode")
-	procGdipSetStringFormatAlign          = modgdiplus.NewProc("GdipSetStringFormatAlign")
-	procGdipSetStringFormatLineAlign      = modgdiplus.NewProc("GdipSetStringFormatLineAlign")
-	procGdipSetTextRenderingHint          = modgdiplus.NewProc("GdipSetTextRenderingHint")
-	procGdiplusStartup                    = modgdiplus.NewProc("GdiplusStartup")
+	procGdipAddPathEllipseI                   = modgdiplus.NewProc("GdipAddPathEllipseI")
+	procGdipCreateBitmapFromFile              = modgdiplus.NewProc("GdipCreateBitmapFromFile")
+	procGdipCreateBitmapFromGraphics          = modgdiplus.NewProc("GdipCreateBitmapFromGraphics")
+	procGdipCreateBitmapFromHBITMAP           = modgdiplus.NewProc("GdipCreateBitmapFromHBITMAP")
+	procGdipCreateBitmapFromScan0             = modgdiplus.NewProc("GdipCreateBitmapFromScan0")
+	procGdipCreateBitmapFromStream            = modgdiplus.NewProc("GdipCreateBitmapFromStream")
+	procGdipCreateFontFamilyFromName          = modgdiplus.NewProc("GdipCreateFontFamilyFromName")
+	procGdipCreateFromHDC                     = modgdiplus.NewProc("GdipCreateFromHDC")
+	procGdipCreateHBITMAPFromBitmap           = modgdiplus.NewProc("GdipCreateHBITMAPFromBitmap")
+	procGdipCreatePath                        = modgdiplus.NewProc("GdipCreatePath")
+	procGdipCreateSolidFill                   = modgdiplus.NewProc("GdipCreateSolidFill")
+	procGdipCreateStringFormat                = modgdiplus.NewProc("GdipCreateStringFormat")
+	procGdipDeleteBrush                       = modgdiplus.NewProc("GdipDeleteBrush")
+	procGdipDeleteFont                        = modgdiplus.NewProc("GdipDeleteFont")
+	procGdipDeleteFontFamily                  = modgdiplus.NewProc("GdipDeleteFontFamily")
+	procGdipDeleteGraphics                    = modgdiplus.NewProc("GdipDeleteGraphics")
+	procGdipDeletePath                        = modgdiplus.NewProc("GdipDeletePath")
+	procGdipDeleteStringFormat                = modgdiplus.NewProc("GdipDeleteStringFormat")
+	procGdipDisposeImage                      = modgdiplus.NewProc("GdipDisposeImage")
+	procGdipDrawImageRectI                    = modgdiplus.NewProc("GdipDrawImageRectI")
+	procGdipDrawImageRectRectI                = modgdiplus.NewProc("GdipDrawImageRectRectI")
+	procGdipDrawString                        = modgdiplus.NewProc("GdipDrawString")
+	procGdipFillEllipseI                      = modgdiplus.NewProc("GdipFillEllipseI")
+	procGdipGetCompositingMode                = modgdiplus.NewProc("GdipGetCompositingMode")
+	procGdipGetGenericFontFamilyMonospace     = modgdiplus.NewProc("GdipGetGenericFontFamilyMonospace")
+	procGdipGetGenericFontFamilySansSerif     = modgdiplus.NewProc("GdipGetGenericFontFamilySansSerif")
+	procGdipGetGenericFontFamilySerif         = modgdiplus.NewProc("GdipGetGenericFontFamilySerif")
+	procGdipGetImageDimension                 = modgdiplus.NewProc("GdipGetImageDimension")
+	procGdipGetImageGraphicsContext           = modgdiplus.NewProc("GdipGetImageGraphicsContext")
+	procGdipGetImageHeight                    = modgdiplus.NewProc("GdipGetImageHeight")
+	procGdipGetImageHorizontalResolution      = modgdiplus.NewProc("GdipGetImageHorizontalResolution")
+	procGdipGetImageVerticalResolution        = modgdiplus.NewProc("GdipGetImageVerticalResolution")
+	procGdipGetImageWidth                     = modgdiplus.NewProc("GdipGetImageWidth")
+	procGdipGraphicsClear                     = modgdiplus.NewProc("GdipGraphicsClear")
+	procGdipResetClip                         = modgdiplus.NewProc("GdipResetClip")
+	procGdipSetClipPath                       = modgdiplus.NewProc("GdipSetClipPath")
+	procGdipSetCompositingMode                = modgdiplus.NewProc("GdipSetCompositingMode")
+	procGdipSetCompositingQuality             = modgdiplus.NewProc("GdipSetCompositingQuality")
+	procGdipSetInterpolationMode              = modgdiplus.NewProc("GdipSetInterpolationMode")
+	procGdipSetPixelOffsetMode                = modgdiplus.NewProc("GdipSetPixelOffsetMode")
+	procGdipSetSmoothingMode                  = modgdiplus.NewProc("GdipSetSmoothingMode")
+	procGdipSetStringFormatAlign              = modgdiplus.NewProc("GdipSetStringFormatAlign")
+	procGdipSetStringFormatLineAlign          = modgdiplus.NewProc("GdipSetStringFormatLineAlign")
+	procGdipSetTextRenderingHint              = modgdiplus.NewProc("GdipSetTextRenderingHint")
+	procGdiplusStartup                        = modgdiplus.NewProc("GdiplusStartup")
+	procBeginBufferedPaint                    = moduxtheme.NewProc("BeginBufferedPaint")
+	procBufferedPaintInit                     = moduxtheme.NewProc("BufferedPaintInit")
+	procCloseThemeData                        = moduxtheme.NewProc("CloseThemeData")
+	procDrawThemeBackground                   = moduxtheme.NewProc("DrawThemeBackground")
+	procDrawThemeParentBackground             = moduxtheme.NewProc("DrawThemeParentBackground")
+	procDrawThemeTextEx                       = moduxtheme.NewProc("DrawThemeTextEx")
+	procEndBufferedPaint                      = moduxtheme.NewProc("EndBufferedPaint")
+	procGetThemeColor                         = moduxtheme.NewProc("GetThemeColor")
+	procGetThemeEnumValue                     = moduxtheme.NewProc("GetThemeEnumValue")
+	procGetThemeFont                          = moduxtheme.NewProc("GetThemeFont")
+	procGetThemeInt                           = moduxtheme.NewProc("GetThemeInt")
+	procGetThemeMargins                       = moduxtheme.NewProc("GetThemeMargins")
+	procGetThemeMetric                        = moduxtheme.NewProc("GetThemeMetric")
+	procGetThemePartSize                      = moduxtheme.NewProc("GetThemePartSize")
+	procGetThemeSysFont                       = moduxtheme.NewProc("GetThemeSysFont")
+	procGetThemeTextExtent                    = moduxtheme.NewProc("GetThemeTextExtent")
+	procIsAppThemed                           = moduxtheme.NewProc("IsAppThemed")
+	procIsThemeBackgroundPartiallyTransparent = moduxtheme.NewProc("IsThemeBackgroundPartiallyTransparent")
+	procOpenThemeData                         = moduxtheme.NewProc("OpenThemeData")
+	procSetWindowTheme                        = moduxtheme.NewProc("SetWindowTheme")
 )
 
 func GdipAddPathEllipseI(path *GpPath, x int32, y int32, width int32, height int32) (ret GpStatus) {
@@ -355,5 +376,132 @@ func GdipSetTextRenderingHint(graphics *GpGraphics, mode TextRenderingHint) (ret
 func GdiplusStartup(token *uintptr, input *GdiplusStartupInput, output *GdiplusStartupOutput) (ret GpStatus) {
 	r0, _, _ := syscall.Syscall(procGdiplusStartup.Addr(), 3, uintptr(unsafe.Pointer(token)), uintptr(unsafe.Pointer(input)), uintptr(unsafe.Pointer(output)))
 	ret = GpStatus(r0)
+	return
+}
+
+func BeginBufferedPaint(hdcTarget HDC, prcTarget *RECT, format BP_BUFFERFORMAT, paintParams *BP_PAINTPARAMS, phdc *HDC) (pb HPAINTBUFFER, err error) {
+	r0, _, e1 := syscall.Syscall6(procBeginBufferedPaint.Addr(), 5, uintptr(hdcTarget), uintptr(unsafe.Pointer(prcTarget)), uintptr(format), uintptr(unsafe.Pointer(paintParams)), uintptr(unsafe.Pointer(phdc)), 0)
+	pb = HPAINTBUFFER(r0)
+	if pb == 0 {
+		err = errnoErr(e1)
+	}
+	return
+}
+
+func BufferedPaintInit() (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procBufferedPaintInit.Addr(), 0, 0, 0, 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func CloseThemeData(hTheme HTHEME) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procCloseThemeData.Addr(), 1, uintptr(hTheme), 0, 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func DrawThemeBackground(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, pRect *RECT, pClipRect *RECT) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall6(procDrawThemeBackground.Addr(), 6, uintptr(hTheme), uintptr(hdc), uintptr(iPartId), uintptr(iStateId), uintptr(unsafe.Pointer(pRect)), uintptr(unsafe.Pointer(pClipRect)))
+	ret = HRESULT(r0)
+	return
+}
+
+func DrawThemeParentBackground(hWnd HWND, hdc HDC, prc *RECT) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procDrawThemeParentBackground.Addr(), 3, uintptr(hWnd), uintptr(hdc), uintptr(unsafe.Pointer(prc)))
+	ret = HRESULT(r0)
+	return
+}
+
+func DrawThemeTextEx(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, pszText *uint16, iCharCount int32, dwFlags uint32, pRect *RECT, pOptions *DTTOPTS) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall9(procDrawThemeTextEx.Addr(), 9, uintptr(hTheme), uintptr(hdc), uintptr(iPartId), uintptr(iStateId), uintptr(unsafe.Pointer(pszText)), uintptr(iCharCount), uintptr(dwFlags), uintptr(unsafe.Pointer(pRect)), uintptr(unsafe.Pointer(pOptions)))
+	ret = HRESULT(r0)
+	return
+}
+
+func EndBufferedPaint(paintBuf HPAINTBUFFER, updateTarget bool) (ret HRESULT) {
+	var _p0 uint32
+	if updateTarget {
+		_p0 = 1
+	}
+	r0, _, _ := syscall.Syscall(procEndBufferedPaint.Addr(), 2, uintptr(paintBuf), uintptr(_p0), 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func GetThemeColor(hTheme HTHEME, iPartId int32, iStateId int32, iPropId int32, pColor *COLORREF) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall6(procGetThemeColor.Addr(), 5, uintptr(hTheme), uintptr(iPartId), uintptr(iStateId), uintptr(iPropId), uintptr(unsafe.Pointer(pColor)), 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func GetThemeEnumValue(hTheme HTHEME, iPartId int32, iStateId int32, iPropId int32, piVal *int32) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall6(procGetThemeEnumValue.Addr(), 5, uintptr(hTheme), uintptr(iPartId), uintptr(iStateId), uintptr(iPropId), uintptr(unsafe.Pointer(piVal)), 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func GetThemeFont(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, iPropId int32, pFont *LOGFONT) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall6(procGetThemeFont.Addr(), 6, uintptr(hTheme), uintptr(hdc), uintptr(iPartId), uintptr(iStateId), uintptr(iPropId), uintptr(unsafe.Pointer(pFont)))
+	ret = HRESULT(r0)
+	return
+}
+
+func GetThemeInt(hTheme HTHEME, iPartId int32, iStateId int32, iPropId int32, piVal *int32) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall6(procGetThemeInt.Addr(), 5, uintptr(hTheme), uintptr(iPartId), uintptr(iStateId), uintptr(iPropId), uintptr(unsafe.Pointer(piVal)), 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func GetThemeMargins(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, iPropId int32, prc *RECT, pMargins *MARGINS) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall9(procGetThemeMargins.Addr(), 7, uintptr(hTheme), uintptr(hdc), uintptr(iPartId), uintptr(iStateId), uintptr(iPropId), uintptr(unsafe.Pointer(prc)), uintptr(unsafe.Pointer(pMargins)), 0, 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func GetThemeMetric(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, iPropId int32, piVal *int32) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall6(procGetThemeMetric.Addr(), 6, uintptr(hTheme), uintptr(hdc), uintptr(iPartId), uintptr(iStateId), uintptr(iPropId), uintptr(unsafe.Pointer(piVal)))
+	ret = HRESULT(r0)
+	return
+}
+
+func GetThemePartSize(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, prc *RECT, eSize THEMESIZE, psz *SIZE) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall9(procGetThemePartSize.Addr(), 7, uintptr(hTheme), uintptr(hdc), uintptr(iPartId), uintptr(iStateId), uintptr(unsafe.Pointer(prc)), uintptr(eSize), uintptr(unsafe.Pointer(psz)), 0, 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func GetThemeSysFont(hTheme HTHEME, iFontId int32, plf *LOGFONT) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procGetThemeSysFont.Addr(), 3, uintptr(hTheme), uintptr(iFontId), uintptr(unsafe.Pointer(plf)))
+	ret = HRESULT(r0)
+	return
+}
+
+func GetThemeTextExtent(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, pszText *uint16, iCharCount int32, dwTextFlags uint32, pBoundingRect *RECT, pExtentRect *RECT) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall9(procGetThemeTextExtent.Addr(), 9, uintptr(hTheme), uintptr(hdc), uintptr(iPartId), uintptr(iStateId), uintptr(unsafe.Pointer(pszText)), uintptr(iCharCount), uintptr(dwTextFlags), uintptr(unsafe.Pointer(pBoundingRect)), uintptr(unsafe.Pointer(pExtentRect)))
+	ret = HRESULT(r0)
+	return
+}
+
+func IsAppThemed() (ret bool) {
+	r0, _, _ := syscall.Syscall(procIsAppThemed.Addr(), 0, 0, 0, 0)
+	ret = r0 != 0
+	return
+}
+
+func IsThemeBackgroundPartiallyTransparent(hTheme HTHEME, iPartId int32, iStateId int32) (ret bool) {
+	r0, _, _ := syscall.Syscall(procIsThemeBackgroundPartiallyTransparent.Addr(), 3, uintptr(hTheme), uintptr(iPartId), uintptr(iStateId))
+	ret = r0 != 0
+	return
+}
+
+func OpenThemeData(hwnd HWND, pszClassList *uint16) (ret HTHEME) {
+	r0, _, _ := syscall.Syscall(procOpenThemeData.Addr(), 2, uintptr(hwnd), uintptr(unsafe.Pointer(pszClassList)), 0)
+	ret = HTHEME(r0)
+	return
+}
+
+func SetWindowTheme(hwnd HWND, pszSubAppName *uint16, pszSubIdList *uint16) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procSetWindowTheme.Addr(), 3, uintptr(hwnd), uintptr(unsafe.Pointer(pszSubAppName)), uintptr(unsafe.Pointer(pszSubIdList)))
+	ret = HRESULT(r0)
 	return
 }
