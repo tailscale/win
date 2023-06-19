@@ -4,5 +4,5 @@
 
 package win
 
-//go:generate go run golang.org/x/sys/windows/mkwinsyscall -output zsyscall_windows.go gdiplus.go uxtheme.go
+//go:generate go run golang.org/x/sys/windows/mkwinsyscall -output zsyscall_windows.go comctl32.go gdiplus.go uxtheme.go
 //go:generate go run golang.org/x/tools/cmd/goimports -w zsyscall_windows.go

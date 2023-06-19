@@ -39,9 +39,11 @@ func errnoErr(e syscall.Errno) error {
 }
 
 var (
-	modgdiplus = windows.NewLazySystemDLL("gdiplus.dll")
-	moduxtheme = windows.NewLazySystemDLL("uxtheme.dll")
+	modcomctl32 = windows.NewLazySystemDLL("comctl32.dll")
+	modgdiplus  = windows.NewLazySystemDLL("gdiplus.dll")
+	moduxtheme  = windows.NewLazySystemDLL("uxtheme.dll")
 
+	procTaskDialogIndirect                    = modcomctl32.NewProc("TaskDialogIndirect")
 	procGdipAddPathEllipseI                   = modgdiplus.NewProc("GdipAddPathEllipseI")
 	procGdipCreateBitmapFromFile              = modgdiplus.NewProc("GdipCreateBitmapFromFile")
 	procGdipCreateBitmapFromGraphics          = modgdiplus.NewProc("GdipCreateBitmapFromGraphics")
@@ -108,6 +110,12 @@ var (
 	procOpenThemeData                         = moduxtheme.NewProc("OpenThemeData")
 	procSetWindowTheme                        = moduxtheme.NewProc("SetWindowTheme")
 )
+
+func TaskDialogIndirect(pTaskConfig *TASKDIALOGCONFIG, pnButton *int32, pnRadioButton *int32, pfVerificationFlagChecked *BOOL) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall6(procTaskDialogIndirect.Addr(), 4, uintptr(unsafe.Pointer(pTaskConfig)), uintptr(unsafe.Pointer(pnButton)), uintptr(unsafe.Pointer(pnRadioButton)), uintptr(unsafe.Pointer(pfVerificationFlagChecked)), 0, 0)
+	ret = HRESULT(r0)
+	return
+}
 
 func GdipAddPathEllipseI(path *GpPath, x int32, y int32, width int32, height int32) (ret GpStatus) {
 	r0, _, _ := syscall.Syscall6(procGdipAddPathEllipseI.Addr(), 5, uintptr(unsafe.Pointer(path)), uintptr(x), uintptr(y), uintptr(width), uintptr(height), 0)
