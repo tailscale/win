@@ -344,11 +344,13 @@ func GdipCreateFont(fontFamily *GpFontFamily, emSize float32, style FontStyle, u
 //sys GdipCreateBitmapFromFile(filename *uint16, bitmap **GpBitmap) (ret GpStatus) = gdiplus.GdipCreateBitmapFromFile
 //sys GdipCreateBitmapFromGraphics(width int32, height int32, graphics *GpGraphics, bitmap **GpBitmap) (ret GpStatus) = gdiplus.GdipCreateBitmapFromGraphics
 //sys GdipCreateBitmapFromHBITMAP(hbm HBITMAP, hpal HPALETTE, bitmap **GpBitmap) (ret GpStatus) = gdiplus.GdipCreateBitmapFromHBITMAP
+//sys GdipCreateBitmapFromHICON(hicon HICON, bitmap **GpBitmap) (ret GpStatus) = gdiplus.GdipCreateBitmapFromHICON
 //sys GdipCreateBitmapFromScan0(width int32, height int32, stride int32, format PixelFormat, scan0 *byte, bitmap **GpBitmap) (ret GpStatus) = gdiplus.GdipCreateBitmapFromScan0
 //sys GdipCreateBitmapFromStream(stream *com.IStreamABI, bitmap **GpBitmap) (ret GpStatus) = gdiplus.GdipCreateBitmapFromStream
 //sys GdipCreateFontFamilyFromName(name *uint16, collection *GpFontCollection, family **GpFontFamily) (ret GpStatus) = gdiplus.GdipCreateFontFamilyFromName
 //sys GdipCreateFromHDC(hdc HDC, graphics **GpGraphics) (ret GpStatus) = gdiplus.GdipCreateFromHDC
 //sys GdipCreateHBITMAPFromBitmap(bitmap *GpBitmap, hbmReturn *HBITMAP, background ARGB) (ret GpStatus) = gdiplus.GdipCreateHBITMAPFromBitmap
+//sys GdipCreateHICONFromBitmap(bitmap *GpBitmap, hbmReturn *HICON) (ret GpStatus) = gdiplus.GdipCreateHICONFromBitmap
 //sys GdipCreatePath(fillMode FillMode, path **GpPath) (ret GpStatus) = gdiplus.GdipCreatePath
 //sys GdipCreateSolidFill(color ARGB, brush **GpSolidFill) (ret GpStatus) = gdiplus.GdipCreateSolidFill
 //sys GdipCreateStringFormat(flags StringFormatFlags, language LANGID, format **GpStringFormat) (ret GpStatus) = gdiplus.GdipCreateStringFormat
