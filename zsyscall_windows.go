@@ -48,11 +48,13 @@ var (
 	procGdipCreateBitmapFromFile              = modgdiplus.NewProc("GdipCreateBitmapFromFile")
 	procGdipCreateBitmapFromGraphics          = modgdiplus.NewProc("GdipCreateBitmapFromGraphics")
 	procGdipCreateBitmapFromHBITMAP           = modgdiplus.NewProc("GdipCreateBitmapFromHBITMAP")
+	procGdipCreateBitmapFromHICON             = modgdiplus.NewProc("GdipCreateBitmapFromHICON")
 	procGdipCreateBitmapFromScan0             = modgdiplus.NewProc("GdipCreateBitmapFromScan0")
 	procGdipCreateBitmapFromStream            = modgdiplus.NewProc("GdipCreateBitmapFromStream")
 	procGdipCreateFontFamilyFromName          = modgdiplus.NewProc("GdipCreateFontFamilyFromName")
 	procGdipCreateFromHDC                     = modgdiplus.NewProc("GdipCreateFromHDC")
 	procGdipCreateHBITMAPFromBitmap           = modgdiplus.NewProc("GdipCreateHBITMAPFromBitmap")
+	procGdipCreateHICONFromBitmap             = modgdiplus.NewProc("GdipCreateHICONFromBitmap")
 	procGdipCreatePath                        = modgdiplus.NewProc("GdipCreatePath")
 	procGdipCreateSolidFill                   = modgdiplus.NewProc("GdipCreateSolidFill")
 	procGdipCreateStringFormat                = modgdiplus.NewProc("GdipCreateStringFormat")
@@ -141,6 +143,12 @@ func GdipCreateBitmapFromHBITMAP(hbm HBITMAP, hpal HPALETTE, bitmap **GpBitmap) 
 	return
 }
 
+func GdipCreateBitmapFromHICON(hicon HICON, bitmap **GpBitmap) (ret GpStatus) {
+	r0, _, _ := syscall.Syscall(procGdipCreateBitmapFromHICON.Addr(), 2, uintptr(hicon), uintptr(unsafe.Pointer(bitmap)), 0)
+	ret = GpStatus(r0)
+	return
+}
+
 func GdipCreateBitmapFromScan0(width int32, height int32, stride int32, format PixelFormat, scan0 *byte, bitmap **GpBitmap) (ret GpStatus) {
 	r0, _, _ := syscall.Syscall6(procGdipCreateBitmapFromScan0.Addr(), 6, uintptr(width), uintptr(height), uintptr(stride), uintptr(format), uintptr(unsafe.Pointer(scan0)), uintptr(unsafe.Pointer(bitmap)))
 	ret = GpStatus(r0)
@@ -167,6 +175,12 @@ func GdipCreateFromHDC(hdc HDC, graphics **GpGraphics) (ret GpStatus) {
 
 func GdipCreateHBITMAPFromBitmap(bitmap *GpBitmap, hbmReturn *HBITMAP, background ARGB) (ret GpStatus) {
 	r0, _, _ := syscall.Syscall(procGdipCreateHBITMAPFromBitmap.Addr(), 3, uintptr(unsafe.Pointer(bitmap)), uintptr(unsafe.Pointer(hbmReturn)), uintptr(background))
+	ret = GpStatus(r0)
+	return
+}
+
+func GdipCreateHICONFromBitmap(bitmap *GpBitmap, hbmReturn *HICON) (ret GpStatus) {
+	r0, _, _ := syscall.Syscall(procGdipCreateHICONFromBitmap.Addr(), 2, uintptr(unsafe.Pointer(bitmap)), uintptr(unsafe.Pointer(hbmReturn)), 0)
 	ret = GpStatus(r0)
 	return
 }
