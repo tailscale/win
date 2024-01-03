@@ -1,5 +1,5 @@
-github.com/dblohm7/wingoes v0.0.0-20230131214643-2b26ab7fb5f9 h1:BHpX4mgaPLK+6K0ByiQ3fJH9ZrwmHfPJWPIO3et9j6g=
-github.com/dblohm7/wingoes v0.0.0-20230131214643-2b26ab7fb5f9/go.mod h1:54MIJVGBIdbHuav7/YRAAhRxZvpEV9Z9p6jCKPLJ2lw=
+github.com/dblohm7/wingoes v0.0.0-20231019175336-f6e33aa7cc34 h1:FBMro26TLQwBk+n4fbTSmSf3QUKb09pvW4fz49lxpl0=
+github.com/dblohm7/wingoes v0.0.0-20231019175336-f6e33aa7cc34/go.mod h1:6NCrWM5jRefaG7iN0iMShPalLsljHWBh9v1zxM2f8Xs=
 golang.org/x/exp v0.0.0-20230127140709-cafedaf64729 h1:H2kBA039yqxDv2DScpuC0knhZXO6Evfmt7mN8sGMh/4=
 golang.org/x/mod v0.10.0 h1:lFO9qtOdlre5W1jxS3r/4szv2/6iXxScdzjoBMXNhYk=
 golang.org/x/mod v0.10.0/go.mod h1:iBbtSCu2XBx23ZKBPSOrRkjjQPZFPuis4dIYUhu/chs=
