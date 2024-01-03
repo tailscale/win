@@ -2971,7 +2971,7 @@ func LoadString(instRes HINSTANCE, id uint32, buf *uint16, length int32) int32 {
 //	MB_ICONHAND (See MB_ICONERROR)
 //	MB_ICONINFORMATION (The sounds specified as the Windows Asterisk sound)
 //	MB_ICONQUESTION (The sound specified as the Windows Question sound)
-// 	MB_ICONSTOP (See MB_ICONERROR)
+//	MB_ICONSTOP (See MB_ICONERROR)
 //	MB_ICONWARNING (The sounds specified as the Windows Exclamation sound)
 //	MB_OK (The sound specified as the Windows Default Beep sound)
 //
@@ -3533,3 +3533,38 @@ func WindowFromPoint(Point POINT) HWND {
 
 	return HWND(ret)
 }
+
+const (
+	MSGF_USER = 4096
+)
+
+//sys CallMsgFilter(msg *MSG, nCode int32) (ret bool) = user32.CallMsgFilterW
+
+const (
+	QS_KEY            = 0x0001
+	QS_MOUSEMOVE      = 0x0002
+	QS_MOUSEBUTTON    = 0x0004
+	QS_POSTMESSAGE    = 0x0008
+	QS_TIMER          = 0x0010
+	QS_PAINT          = 0x0020
+	QS_SENDMESSAGE    = 0x0040
+	QS_HOTKEY         = 0x0080
+	QS_ALLPOSTMESSAGE = 0x0100
+	QS_RAWINPUT       = 0x0400
+	QS_TOUCH          = 0x0800
+	QS_POINTER        = 0x1000
+	QS_MOUSE          = QS_MOUSEMOVE | QS_MOUSEBUTTON
+	QS_INPUT          = QS_MOUSE | QS_KEY | QS_RAWINPUT | QS_TOUCH | QS_POINTER
+	QS_ALLEVENTS      = QS_INPUT | QS_POSTMESSAGE | QS_TIMER | QS_PAINT | QS_HOTKEY
+	QS_ALLINPUT       = QS_INPUT | QS_POSTMESSAGE | QS_TIMER | QS_PAINT | QS_HOTKEY | QS_SENDMESSAGE
+)
+
+//sys GetQueueStatus(flags uint32) (ret uint32) = user32.GetQueueStatus
+
+const (
+	MWMO_WAITALL        = 0x0001
+	MWMO_ALERTABLE      = 0x0002
+	MWMO_INPUTAVAILABLE = 0x0004
+)
+
+//sys MsgWaitForMultipleObjectsEx(count uint32, handles *windows.Handle, timeoutMillis uint32, wakeMask uint32, flags uint32) (ret uint32, err error) [failretval==windows.WAIT_FAILED] = user32.MsgWaitForMultipleObjectsEx

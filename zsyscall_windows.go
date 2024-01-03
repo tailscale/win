@@ -41,6 +41,8 @@ func errnoErr(e syscall.Errno) error {
 var (
 	modcomctl32 = windows.NewLazySystemDLL("comctl32.dll")
 	modgdiplus  = windows.NewLazySystemDLL("gdiplus.dll")
+	modkernel32 = windows.NewLazySystemDLL("kernel32.dll")
+	moduser32   = windows.NewLazySystemDLL("user32.dll")
 	moduxtheme  = windows.NewLazySystemDLL("uxtheme.dll")
 
 	procTaskDialogIndirect                    = modcomctl32.NewProc("TaskDialogIndirect")
@@ -91,6 +93,10 @@ var (
 	procGdipSetStringFormatLineAlign          = modgdiplus.NewProc("GdipSetStringFormatLineAlign")
 	procGdipSetTextRenderingHint              = modgdiplus.NewProc("GdipSetTextRenderingHint")
 	procGdiplusStartup                        = modgdiplus.NewProc("GdiplusStartup")
+	procSwitchToThread                        = modkernel32.NewProc("SwitchToThread")
+	procCallMsgFilterW                        = moduser32.NewProc("CallMsgFilterW")
+	procGetQueueStatus                        = moduser32.NewProc("GetQueueStatus")
+	procMsgWaitForMultipleObjectsEx           = moduser32.NewProc("MsgWaitForMultipleObjectsEx")
 	procBeginBufferedPaint                    = moduxtheme.NewProc("BeginBufferedPaint")
 	procBufferedPaintInit                     = moduxtheme.NewProc("BufferedPaintInit")
 	procCloseThemeData                        = moduxtheme.NewProc("CloseThemeData")
@@ -398,6 +404,33 @@ func GdipSetTextRenderingHint(graphics *GpGraphics, mode TextRenderingHint) (ret
 func GdiplusStartup(token *uintptr, input *GdiplusStartupInput, output *GdiplusStartupOutput) (ret GpStatus) {
 	r0, _, _ := syscall.Syscall(procGdiplusStartup.Addr(), 3, uintptr(unsafe.Pointer(token)), uintptr(unsafe.Pointer(input)), uintptr(unsafe.Pointer(output)))
 	ret = GpStatus(r0)
+	return
+}
+
+func SwitchToThread() (ret bool) {
+	r0, _, _ := syscall.Syscall(procSwitchToThread.Addr(), 0, 0, 0, 0)
+	ret = r0 != 0
+	return
+}
+
+func CallMsgFilter(msg *MSG, nCode int32) (ret bool) {
+	r0, _, _ := syscall.Syscall(procCallMsgFilterW.Addr(), 2, uintptr(unsafe.Pointer(msg)), uintptr(nCode), 0)
+	ret = r0 != 0
+	return
+}
+
+func GetQueueStatus(flags uint32) (ret uint32) {
+	r0, _, _ := syscall.Syscall(procGetQueueStatus.Addr(), 1, uintptr(flags), 0, 0)
+	ret = uint32(r0)
+	return
+}
+
+func MsgWaitForMultipleObjectsEx(count uint32, handles *windows.Handle, timeoutMillis uint32, wakeMask uint32, flags uint32) (ret uint32, err error) {
+	r0, _, e1 := syscall.Syscall6(procMsgWaitForMultipleObjectsEx.Addr(), 5, uintptr(count), uintptr(unsafe.Pointer(handles)), uintptr(timeoutMillis), uintptr(wakeMask), uintptr(flags), 0)
+	ret = uint32(r0)
+	if ret == windows.WAIT_FAILED {
+		err = errnoErr(e1)
+	}
 	return
 }
 
