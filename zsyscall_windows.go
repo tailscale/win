@@ -40,12 +40,23 @@ func errnoErr(e syscall.Errno) error {
 
 var (
 	modcomctl32 = windows.NewLazySystemDLL("comctl32.dll")
+	moddwmapi   = windows.NewLazySystemDLL("dwmapi.dll")
 	modgdiplus  = windows.NewLazySystemDLL("gdiplus.dll")
 	modkernel32 = windows.NewLazySystemDLL("kernel32.dll")
 	moduser32   = windows.NewLazySystemDLL("user32.dll")
 	moduxtheme  = windows.NewLazySystemDLL("uxtheme.dll")
 
 	procTaskDialogIndirect                    = modcomctl32.NewProc("TaskDialogIndirect")
+	procDwmExtendFrameIntoClientArea          = moddwmapi.NewProc("DwmExtendFrameIntoClientArea")
+	procDwmGetWindowAttribute                 = moddwmapi.NewProc("DwmGetWindowAttribute")
+	procDwmInvalidateIconicBitmaps            = moddwmapi.NewProc("DwmInvalidateIconicBitmaps")
+	procDwmQueryThumbnailSourceSize           = moddwmapi.NewProc("DwmQueryThumbnailSourceSize")
+	procDwmRegisterThumbnail                  = moddwmapi.NewProc("DwmRegisterThumbnail")
+	procDwmSetIconicLivePreviewBitmap         = moddwmapi.NewProc("DwmSetIconicLivePreviewBitmap")
+	procDwmSetIconicThumbnail                 = moddwmapi.NewProc("DwmSetIconicThumbnail")
+	procDwmSetWindowAttribute                 = moddwmapi.NewProc("DwmSetWindowAttribute")
+	procDwmUnregisterThumbnail                = moddwmapi.NewProc("DwmUnregisterThumbnail")
+	procDwmUpdateThumbnailProperties          = moddwmapi.NewProc("DwmUpdateThumbnailProperties")
 	procGdipAddPathEllipseI                   = modgdiplus.NewProc("GdipAddPathEllipseI")
 	procGdipCreateBitmapFromFile              = modgdiplus.NewProc("GdipCreateBitmapFromFile")
 	procGdipCreateBitmapFromGraphics          = modgdiplus.NewProc("GdipCreateBitmapFromGraphics")
@@ -122,6 +133,66 @@ var (
 
 func TaskDialogIndirect(pTaskConfig *TASKDIALOGCONFIG, pnButton *int32, pnRadioButton *int32, pfVerificationFlagChecked *BOOL) (ret HRESULT) {
 	r0, _, _ := syscall.Syscall6(procTaskDialogIndirect.Addr(), 4, uintptr(unsafe.Pointer(pTaskConfig)), uintptr(unsafe.Pointer(pnButton)), uintptr(unsafe.Pointer(pnRadioButton)), uintptr(unsafe.Pointer(pfVerificationFlagChecked)), 0, 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func DwmExtendFrameIntoClientArea(hwnd HWND, inset *MARGINS) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procDwmExtendFrameIntoClientArea.Addr(), 2, uintptr(hwnd), uintptr(unsafe.Pointer(inset)), 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func DwmGetWindowAttribute(hwnd HWND, attribute DWMWINDOWATTRIBUTE, attrVal unsafe.Pointer, attrValLen uint32) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall6(procDwmGetWindowAttribute.Addr(), 4, uintptr(hwnd), uintptr(attribute), uintptr(attrVal), uintptr(attrValLen), 0, 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func DwmInvalidateIconicBitmaps(hwnd HWND) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procDwmInvalidateIconicBitmaps.Addr(), 1, uintptr(hwnd), 0, 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func DwmQueryThumbnailSourceSize(thumbnail HTHUMBNAIL, size *SIZE) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procDwmQueryThumbnailSourceSize.Addr(), 2, uintptr(thumbnail), uintptr(unsafe.Pointer(size)), 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func DwmRegisterThumbnail(hwndDest HWND, hwndSrc HWND, handle *HTHUMBNAIL) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procDwmRegisterThumbnail.Addr(), 3, uintptr(hwndDest), uintptr(hwndSrc), uintptr(unsafe.Pointer(handle)))
+	ret = HRESULT(r0)
+	return
+}
+
+func DwmSetIconicLivePreviewBitmap(hwnd HWND, hbmp HBITMAP, clientRegionOffset *POINT, flags uint32) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall6(procDwmSetIconicLivePreviewBitmap.Addr(), 4, uintptr(hwnd), uintptr(hbmp), uintptr(unsafe.Pointer(clientRegionOffset)), uintptr(flags), 0, 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func DwmSetIconicThumbnail(hwnd HWND, hbmp HBITMAP, flags uint32) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procDwmSetIconicThumbnail.Addr(), 3, uintptr(hwnd), uintptr(hbmp), uintptr(flags))
+	ret = HRESULT(r0)
+	return
+}
+
+func DwmSetWindowAttribute(hwnd HWND, attribute DWMWINDOWATTRIBUTE, attrVal unsafe.Pointer, attrValLen uint32) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall6(procDwmSetWindowAttribute.Addr(), 4, uintptr(hwnd), uintptr(attribute), uintptr(attrVal), uintptr(attrValLen), 0, 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func DwmUnregisterThumbnail(thumbnail HTHUMBNAIL) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procDwmUnregisterThumbnail.Addr(), 1, uintptr(thumbnail), 0, 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func DwmUpdateThumbnailProperties(thumbnail HTHUMBNAIL, props *DWM_THUMBNAIL_PROPERTIES) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procDwmUpdateThumbnailProperties.Addr(), 2, uintptr(thumbnail), uintptr(unsafe.Pointer(props)), 0)
 	ret = HRESULT(r0)
 	return
 }
