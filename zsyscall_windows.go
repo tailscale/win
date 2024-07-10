@@ -43,6 +43,7 @@ var (
 	moddwmapi   = windows.NewLazySystemDLL("dwmapi.dll")
 	modgdiplus  = windows.NewLazySystemDLL("gdiplus.dll")
 	modkernel32 = windows.NewLazySystemDLL("kernel32.dll")
+	modshcore   = windows.NewLazySystemDLL("shcore.dll")
 	moduser32   = windows.NewLazySystemDLL("user32.dll")
 	moduxtheme  = windows.NewLazySystemDLL("uxtheme.dll")
 
@@ -105,6 +106,9 @@ var (
 	procGdipSetTextRenderingHint              = modgdiplus.NewProc("GdipSetTextRenderingHint")
 	procGdiplusStartup                        = modgdiplus.NewProc("GdiplusStartup")
 	procSwitchToThread                        = modkernel32.NewProc("SwitchToThread")
+	procGetDpiForMonitor                      = modshcore.NewProc("GetDpiForMonitor")
+	procGetDpiForShellUIComponent             = modshcore.NewProc("GetDpiForShellUIComponent")
+	procGetScaleFactorForMonitor              = modshcore.NewProc("GetScaleFactorForMonitor")
 	procCallMsgFilterW                        = moduser32.NewProc("CallMsgFilterW")
 	procGetQueueStatus                        = moduser32.NewProc("GetQueueStatus")
 	procMsgWaitForMultipleObjectsEx           = moduser32.NewProc("MsgWaitForMultipleObjectsEx")
@@ -482,6 +486,24 @@ func GdiplusStartup(token *uintptr, input *GdiplusStartupInput, output *GdiplusS
 func SwitchToThread() (ret bool) {
 	r0, _, _ := syscall.Syscall(procSwitchToThread.Addr(), 0, 0, 0, 0)
 	ret = r0 != 0
+	return
+}
+
+func GetDpiForMonitor(hmonitor HMONITOR, dpiType MONITOR_DPI_TYPE, dpiX *uint32, dpiY *uint32) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall6(procGetDpiForMonitor.Addr(), 4, uintptr(hmonitor), uintptr(dpiType), uintptr(unsafe.Pointer(dpiX)), uintptr(unsafe.Pointer(dpiY)), 0, 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func GetDpiForShellUIComponent(component SHELL_UI_COMPONENT) (ret uint32) {
+	r0, _, _ := syscall.Syscall(procGetDpiForShellUIComponent.Addr(), 1, uintptr(component), 0, 0)
+	ret = uint32(r0)
+	return
+}
+
+func GetScaleFactorForMonitor(hmonitor HMONITOR, scalePercent *uint32) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procGetScaleFactorForMonitor.Addr(), 2, uintptr(hmonitor), uintptr(unsafe.Pointer(scalePercent)), 0)
+	ret = HRESULT(r0)
 	return
 }
 
