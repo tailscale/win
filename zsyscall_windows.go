@@ -99,6 +99,7 @@ var (
 	procMsgWaitForMultipleObjectsEx           = moduser32.NewProc("MsgWaitForMultipleObjectsEx")
 	procBeginBufferedPaint                    = moduxtheme.NewProc("BeginBufferedPaint")
 	procBufferedPaintInit                     = moduxtheme.NewProc("BufferedPaintInit")
+	procBufferedPaintSetAlpha                 = moduxtheme.NewProc("BufferedPaintSetAlpha")
 	procCloseThemeData                        = moduxtheme.NewProc("CloseThemeData")
 	procDrawThemeBackground                   = moduxtheme.NewProc("DrawThemeBackground")
 	procDrawThemeParentBackground             = moduxtheme.NewProc("DrawThemeParentBackground")
@@ -445,6 +446,12 @@ func BeginBufferedPaint(hdcTarget HDC, prcTarget *RECT, format BP_BUFFERFORMAT, 
 
 func BufferedPaintInit() (ret HRESULT) {
 	r0, _, _ := syscall.Syscall(procBufferedPaintInit.Addr(), 0, 0, 0, 0)
+	ret = HRESULT(r0)
+	return
+}
+
+func BufferedPaintSetAlpha(paintBuf HPAINTBUFFER, prc *RECT, alpha byte) (ret HRESULT) {
+	r0, _, _ := syscall.Syscall(procBufferedPaintSetAlpha.Addr(), 3, uintptr(paintBuf), uintptr(unsafe.Pointer(prc)), uintptr(alpha))
 	ret = HRESULT(r0)
 	return
 }

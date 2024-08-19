@@ -508,6 +508,7 @@ type MARGINS struct {
 
 //sys BeginBufferedPaint(hdcTarget HDC, prcTarget *RECT, format BP_BUFFERFORMAT, paintParams *BP_PAINTPARAMS, phdc *HDC) (pb HPAINTBUFFER, err error) [failretval==0] = uxtheme.BeginBufferedPaint
 //sys BufferedPaintInit() (ret HRESULT) = uxtheme.BufferedPaintInit
+//sys BufferedPaintSetAlpha(paintBuf HPAINTBUFFER, prc *RECT, alpha byte) (ret HRESULT) = uxtheme.BufferedPaintSetAlpha
 //sys CloseThemeData(hTheme HTHEME) (ret HRESULT) = uxtheme.CloseThemeData
 //sys DrawThemeBackground(hTheme HTHEME, hdc HDC, iPartId int32, iStateId int32, pRect *RECT, pClipRect *RECT) (ret HRESULT) = uxtheme.DrawThemeBackground
 //sys DrawThemeParentBackground(hWnd HWND, hdc HDC, prc *RECT) (ret HRESULT) = uxtheme.DrawThemeParentBackground
