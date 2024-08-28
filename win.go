@@ -2,13 +2,16 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package win
 
 import (
+	"math"
 	"unsafe"
 
+	"golang.org/x/exp/constraints"
 	"golang.org/x/sys/windows"
 )
 
@@ -74,8 +77,11 @@ func UTF16PtrToString(s *uint16) string {
 	return windows.UTF16PtrToString(s)
 }
 
-func MAKEINTRESOURCE(id uintptr) *uint16 {
-	return (*uint16)(unsafe.Pointer(id))
+func MAKEINTRESOURCE[ID constraints.Integer](id ID) *uint16 {
+	if id < 0 || id > math.MaxUint16 {
+		panic("resource id out of uint16 range")
+	}
+	return (*uint16)(unsafe.Pointer(uintptr(id)))
 }
 
 func BoolToBOOL(value bool) BOOL {

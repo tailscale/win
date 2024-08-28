@@ -892,6 +892,15 @@ const (
 	WM_UNICHAR                = 0x0109
 )
 
+// Dialog box message constants
+const (
+	DM_GETDEFID   = WM_USER
+	DM_SETDEFID   = WM_USER + 1
+	DM_REPOSITION = WM_USER + 2
+)
+
+const DC_HASDEFID = 0x534B
+
 const (
 	CHILDID_SELF      = 0
 	INDEXID_OBJECT    = 0
@@ -1471,6 +1480,33 @@ const (
 	ODT_COMBOBOX = 3
 	ODT_BUTTON   = 4
 	ODT_STATIC   = 5
+)
+
+type ResourceType uint16
+
+// Resource types
+const (
+	RT_CURSOR       ResourceType = 1
+	RT_BITMAP       ResourceType = 2
+	RT_ICON         ResourceType = 3
+	RT_MENU         ResourceType = 4
+	RT_DIALOG       ResourceType = 5
+	RT_STRING       ResourceType = 6
+	RT_FONTDIR      ResourceType = 7
+	RT_FONT         ResourceType = 8
+	RT_ACCELERATOR  ResourceType = 9
+	RT_RCDATA       ResourceType = 10
+	RT_MESSAGETABLE ResourceType = 11
+	RT_GROUP_CURSOR ResourceType = RT_CURSOR + 11
+	RT_GROUP_ICON   ResourceType = RT_ICON + 11
+	RT_VERSION      ResourceType = 16
+	RT_DLGINCLUDE   ResourceType = 17
+	RT_PLUGPLAY     ResourceType = 19
+	RT_VXD          ResourceType = 20
+	RT_ANICURSOR    ResourceType = 21
+	RT_ANIICON      ResourceType = 22
+	RT_HTML         ResourceType = 23
+	RT_MANIFEST     ResourceType = 24
 )
 
 type NMBCDROPDOWN struct {
