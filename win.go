@@ -78,7 +78,7 @@ func UTF16PtrToString(s *uint16) string {
 }
 
 func MAKEINTRESOURCE[ID constraints.Integer](id ID) *uint16 {
-	if id < 0 || id > math.MaxUint16 {
+	if id < 0 || int64(id) > math.MaxUint16 {
 		panic("resource id out of uint16 range")
 	}
 	return (*uint16)(unsafe.Pointer(uintptr(id)))
