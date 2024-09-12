@@ -3606,3 +3606,21 @@ const (
 )
 
 //sys MsgWaitForMultipleObjectsEx(count uint32, handles *windows.Handle, timeoutMillis uint32, wakeMask uint32, flags uint32) (ret uint32, err error) [failretval==windows.WAIT_FAILED] = user32.MsgWaitForMultipleObjectsEx
+
+const DLGWINDOWEXTRA = 30
+
+const WC_DIALOG ATOM = 0x8002
+
+//sys CreateDialogIndirectParam(instance HINSTANCE, template unsafe.Pointer, parent HWND, dlgProc uintptr, initParam uintptr) (ret HWND, err error) [failretval==0] = user32.CreateDialogIndirectParamW
+//sys DefDlgProc(hdlg HWND, msg uint32, wParam uintptr, lParam uintptr) (ret uintptr) = user32.DefDlgProcW
+//sys GetNextDlgTabItem(hdlg HWND, hctl HWND, previous bool) (ret HWND, err error) [failretval==0] = user32.GetNextDlgTabItem
+
+//sys SetWindowText(hwnd HWND, text *uint16) (err error) [int32(failretval)==0] = user32.SetWindowTextW
+//sys GetWindowText(hwnd HWND, text *uint16, maxCount int32) (ret int32) = user32.GetWindowTextW
+//sys GetWindowTextLength(hwnd HWND) (ret int32) = user32.GetWindowTextLengthW
+
+const (
+	ICON_SMALL  = 0
+	ICON_BIG    = 1
+	ICON_SMALL2 = 2
+)
