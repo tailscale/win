@@ -84,6 +84,10 @@ func MAKEINTRESOURCE[ID constraints.Integer](id ID) *uint16 {
 	return (*uint16)(unsafe.Pointer(uintptr(id)))
 }
 
+func MAKEINTATOM(atom ATOM) *uint16 {
+	return MAKEINTRESOURCE(atom)
+}
+
 func BoolToBOOL(value bool) BOOL {
 	if value {
 		return 1

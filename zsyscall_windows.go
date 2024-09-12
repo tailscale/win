@@ -110,8 +110,14 @@ var (
 	procGetDpiForShellUIComponent             = modshcore.NewProc("GetDpiForShellUIComponent")
 	procGetScaleFactorForMonitor              = modshcore.NewProc("GetScaleFactorForMonitor")
 	procCallMsgFilterW                        = moduser32.NewProc("CallMsgFilterW")
+	procCreateDialogIndirectParamW            = moduser32.NewProc("CreateDialogIndirectParamW")
+	procDefDlgProcW                           = moduser32.NewProc("DefDlgProcW")
+	procGetNextDlgTabItem                     = moduser32.NewProc("GetNextDlgTabItem")
 	procGetQueueStatus                        = moduser32.NewProc("GetQueueStatus")
+	procGetWindowTextLengthW                  = moduser32.NewProc("GetWindowTextLengthW")
+	procGetWindowTextW                        = moduser32.NewProc("GetWindowTextW")
 	procMsgWaitForMultipleObjectsEx           = moduser32.NewProc("MsgWaitForMultipleObjectsEx")
+	procSetWindowTextW                        = moduser32.NewProc("SetWindowTextW")
 	procBeginBufferedPaint                    = moduxtheme.NewProc("BeginBufferedPaint")
 	procBufferedPaintInit                     = moduxtheme.NewProc("BufferedPaintInit")
 	procBufferedPaintSetAlpha                 = moduxtheme.NewProc("BufferedPaintSetAlpha")
@@ -513,9 +519,49 @@ func CallMsgFilter(msg *MSG, nCode int32) (ret bool) {
 	return
 }
 
+func CreateDialogIndirectParam(instance HINSTANCE, template unsafe.Pointer, parent HWND, dlgProc uintptr, initParam uintptr) (ret HWND, err error) {
+	r0, _, e1 := syscall.Syscall6(procCreateDialogIndirectParamW.Addr(), 5, uintptr(instance), uintptr(template), uintptr(parent), uintptr(dlgProc), uintptr(initParam), 0)
+	ret = HWND(r0)
+	if ret == 0 {
+		err = errnoErr(e1)
+	}
+	return
+}
+
+func DefDlgProc(hdlg HWND, msg uint32, wParam uintptr, lParam uintptr) (ret uintptr) {
+	r0, _, _ := syscall.Syscall6(procDefDlgProcW.Addr(), 4, uintptr(hdlg), uintptr(msg), uintptr(wParam), uintptr(lParam), 0, 0)
+	ret = uintptr(r0)
+	return
+}
+
+func GetNextDlgTabItem(hdlg HWND, hctl HWND, previous bool) (ret HWND, err error) {
+	var _p0 uint32
+	if previous {
+		_p0 = 1
+	}
+	r0, _, e1 := syscall.Syscall(procGetNextDlgTabItem.Addr(), 3, uintptr(hdlg), uintptr(hctl), uintptr(_p0))
+	ret = HWND(r0)
+	if ret == 0 {
+		err = errnoErr(e1)
+	}
+	return
+}
+
 func GetQueueStatus(flags uint32) (ret uint32) {
 	r0, _, _ := syscall.Syscall(procGetQueueStatus.Addr(), 1, uintptr(flags), 0, 0)
 	ret = uint32(r0)
+	return
+}
+
+func GetWindowTextLength(hwnd HWND) (ret int32) {
+	r0, _, _ := syscall.Syscall(procGetWindowTextLengthW.Addr(), 1, uintptr(hwnd), 0, 0)
+	ret = int32(r0)
+	return
+}
+
+func GetWindowText(hwnd HWND, text *uint16, maxCount int32) (ret int32) {
+	r0, _, _ := syscall.Syscall(procGetWindowTextW.Addr(), 3, uintptr(hwnd), uintptr(unsafe.Pointer(text)), uintptr(maxCount))
+	ret = int32(r0)
 	return
 }
 
@@ -523,6 +569,14 @@ func MsgWaitForMultipleObjectsEx(count uint32, handles *windows.Handle, timeoutM
 	r0, _, e1 := syscall.Syscall6(procMsgWaitForMultipleObjectsEx.Addr(), 5, uintptr(count), uintptr(unsafe.Pointer(handles)), uintptr(timeoutMillis), uintptr(wakeMask), uintptr(flags), 0)
 	ret = uint32(r0)
 	if ret == windows.WAIT_FAILED {
+		err = errnoErr(e1)
+	}
+	return
+}
+
+func SetWindowText(hwnd HWND, text *uint16) (err error) {
+	r1, _, e1 := syscall.Syscall(procSetWindowTextW.Addr(), 2, uintptr(hwnd), uintptr(unsafe.Pointer(text)), 0)
+	if int32(r1) == 0 {
 		err = errnoErr(e1)
 	}
 	return
