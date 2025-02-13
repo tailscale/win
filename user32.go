@@ -3629,3 +3629,24 @@ const (
 	ICON_BIG    = 1
 	ICON_SMALL2 = 2
 )
+
+type FLASHWINFO_FLAGS uint32
+
+const (
+	FLASHW_STOP      FLASHWINFO_FLAGS = 0
+	FLASHW_CAPTION   FLASHWINFO_FLAGS = 1
+	FLASHW_TRAY      FLASHWINFO_FLAGS = 2
+	FLASHW_ALL       FLASHWINFO_FLAGS = FLASHW_CAPTION | FLASHW_TRAY
+	FLASHW_TIMER     FLASHWINFO_FLAGS = 4
+	FLASHW_TIMERNOFG FLASHWINFO_FLAGS = 0xC
+)
+
+type FLASHWINFO struct {
+	CbSize    uint32
+	Hwnd      HWND
+	Flags     FLASHWINFO_FLAGS
+	UCount    uint32
+	DWTimeout uint32
+}
+
+//sys FlashWindowEx(pfwi *FLASHWINFO) (ret bool) = user32.FlashWindowEx

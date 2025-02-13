@@ -112,6 +112,7 @@ var (
 	procCallMsgFilterW                        = moduser32.NewProc("CallMsgFilterW")
 	procCreateDialogIndirectParamW            = moduser32.NewProc("CreateDialogIndirectParamW")
 	procDefDlgProcW                           = moduser32.NewProc("DefDlgProcW")
+	procFlashWindowEx                         = moduser32.NewProc("FlashWindowEx")
 	procGetNextDlgTabItem                     = moduser32.NewProc("GetNextDlgTabItem")
 	procGetQueueStatus                        = moduser32.NewProc("GetQueueStatus")
 	procGetWindowTextLengthW                  = moduser32.NewProc("GetWindowTextLengthW")
@@ -531,6 +532,12 @@ func CreateDialogIndirectParam(instance HINSTANCE, template unsafe.Pointer, pare
 func DefDlgProc(hdlg HWND, msg uint32, wParam uintptr, lParam uintptr) (ret uintptr) {
 	r0, _, _ := syscall.Syscall6(procDefDlgProcW.Addr(), 4, uintptr(hdlg), uintptr(msg), uintptr(wParam), uintptr(lParam), 0, 0)
 	ret = uintptr(r0)
+	return
+}
+
+func FlashWindowEx(pfwi *FLASHWINFO) (ret bool) {
+	r0, _, _ := syscall.Syscall(procFlashWindowEx.Addr(), 1, uintptr(unsafe.Pointer(pfwi)), 0, 0)
+	ret = r0 != 0
 	return
 }
 
