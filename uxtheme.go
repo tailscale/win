@@ -7,6 +7,11 @@
 
 package win
 
+import (
+	"syscall"
+	"unsafe"
+)
+
 // TMT property ids
 const (
 	TMT_RESERVEDLOW  = 0
@@ -527,3 +532,16 @@ type MARGINS struct {
 //sys IsThemeBackgroundPartiallyTransparent(hTheme HTHEME, iPartId int32, iStateId int32) (ret bool) = uxtheme.IsThemeBackgroundPartiallyTransparent
 //sys OpenThemeData(hwnd HWND, pszClassList *uint16) (ret HTHEME) = uxtheme.OpenThemeData
 //sys SetWindowTheme(hwnd HWND, pszSubAppName *uint16, pszSubIdList *uint16) (ret HRESULT) = uxtheme.SetWindowTheme
+
+var procOpenThemeDataForDpi = moduxtheme.NewProc("OpenThemeDataForDpi")
+
+func OpenThemeDataForDpi(hwnd HWND, pszClassList *uint16, dpi uint32) HTHEME {
+	// We hand-rolled this binding because mkwinsyscall cannot properly generate
+	// a function that might not exist but whose implementation does not return a Go error.
+	if err := procOpenThemeDataForDpi.Find(); err != nil {
+		return 0
+	}
+
+	r0, _, _ := syscall.SyscallN(procOpenThemeDataForDpi.Addr(), uintptr(hwnd), uintptr(unsafe.Pointer(pszClassList)), uintptr(dpi))
+	return HTHEME(r0)
+}
