@@ -1059,6 +1059,7 @@ const (
 	TPM_VERPOSANIMATION = 0x1000
 	TPM_HORIZONTAL      = 0x0000
 	TPM_VERTICAL        = 0x0040
+	TPM_WORKAREA        = 0x10000
 )
 
 // WINDOWPLACEMENT flags
@@ -3650,3 +3651,75 @@ type FLASHWINFO struct {
 }
 
 //sys FlashWindowEx(pfwi *FLASHWINFO) (ret bool) = user32.FlashWindowEx
+
+//sys CalculatePopupWindowPosition(anchorPoint *POINT, windowSize *SIZE, flags uint32, optionalExcludeRect *RECT, outPopupWindowPosition *RECT) (err error) [int32(failretval)==0] = user32.CalculatePopupWindowPosition
+
+type DPI_AWARENESS_CONTEXT windows.Handle
+
+const (
+	DPI_AWARENESS_CONTEXT_UNAWARE              = DPI_AWARENESS_CONTEXT(^uintptr(0))     // -1
+	DPI_AWARENESS_CONTEXT_SYSTEM_AWARE         = DPI_AWARENESS_CONTEXT(^uintptr(0) - 1) // -2
+	DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE    = DPI_AWARENESS_CONTEXT(^uintptr(0) - 2) // -3
+	DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = DPI_AWARENESS_CONTEXT(^uintptr(0) - 3) // -4
+	DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED    = DPI_AWARENESS_CONTEXT(^uintptr(0) - 4) // -5
+)
+
+var (
+	procGetAwarenessFromDpiAwarenessContext = moduser32.NewProc("GetAwarenessFromDpiAwarenessContext")
+	procGetWindowDpiAwarenessContext        = moduser32.NewProc("GetWindowDpiAwarenessContext")
+	procInheritWindowMonitor                = moduser32.NewProc("InheritWindowMonitor")
+	procIsValidDpiAwarenessContext          = moduser32.NewProc("IsValidDpiAwarenessContext")
+)
+
+func IsValidDpiAwarenessContext(value DPI_AWARENESS_CONTEXT) bool {
+	// We hand-rolled this binding because mkwinsyscall cannot properly generate
+	// a function that might not exist but whose implementation does not return a Go error.
+	if err := procIsValidDpiAwarenessContext.Find(); err != nil {
+		return false
+	}
+
+	result, _, _ := syscall.SyscallN(procIsValidDpiAwarenessContext.Addr(), uintptr(value))
+	return int32(result) != 0
+}
+
+func GetWindowDpiAwarenessContext(hwnd HWND) DPI_AWARENESS_CONTEXT {
+	// We hand-rolled this binding because mkwinsyscall cannot properly generate
+	// a function that might not exist but whose implementation does not return a Go error.
+	if err := procGetWindowDpiAwarenessContext.Find(); err != nil {
+		return 0
+	}
+
+	result, _, _ := syscall.SyscallN(procGetWindowDpiAwarenessContext.Addr(), uintptr(hwnd))
+	return DPI_AWARENESS_CONTEXT(result)
+}
+
+type DPI_AWARENESS int32
+
+const (
+	DPI_AWARENESS_INVALID           DPI_AWARENESS = -1
+	DPI_AWARENESS_UNAWARE           DPI_AWARENESS = 0
+	DPI_AWARENESS_SYSTEM_AWARE      DPI_AWARENESS = 1
+	DPI_AWARENESS_PER_MONITOR_AWARE DPI_AWARENESS = 2
+)
+
+func GetAwarenessFromDpiAwarenessContext(value DPI_AWARENESS_CONTEXT) DPI_AWARENESS {
+	// We hand-rolled this binding because mkwinsyscall cannot properly generate
+	// a function that might not exist but whose implementation does not return a Go error.
+	if err := procGetAwarenessFromDpiAwarenessContext.Find(); err != nil {
+		return DPI_AWARENESS_INVALID
+	}
+
+	result, _, _ := syscall.SyscallN(procGetAwarenessFromDpiAwarenessContext.Addr(), uintptr(value))
+	return DPI_AWARENESS(result)
+}
+
+func InheritWindowMonitor(hwnd, hwndInherit HWND) bool {
+	// We hand-rolled this binding because mkwinsyscall cannot properly generate
+	// a function that might not exist but whose implementation does not return a Go error.
+	if err := procInheritWindowMonitor.Find(); err != nil {
+		return false
+	}
+
+	result, _, _ := syscall.SyscallN(procInheritWindowMonitor.Addr(), uintptr(hwnd), uintptr(hwndInherit))
+	return int32(result) != 0
+}

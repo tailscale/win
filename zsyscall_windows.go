@@ -109,6 +109,7 @@ var (
 	procGetDpiForMonitor                      = modshcore.NewProc("GetDpiForMonitor")
 	procGetDpiForShellUIComponent             = modshcore.NewProc("GetDpiForShellUIComponent")
 	procGetScaleFactorForMonitor              = modshcore.NewProc("GetScaleFactorForMonitor")
+	procCalculatePopupWindowPosition          = moduser32.NewProc("CalculatePopupWindowPosition")
 	procCallMsgFilterW                        = moduser32.NewProc("CallMsgFilterW")
 	procCreateDialogIndirectParamW            = moduser32.NewProc("CreateDialogIndirectParamW")
 	procDefDlgProcW                           = moduser32.NewProc("DefDlgProcW")
@@ -511,6 +512,14 @@ func GetDpiForShellUIComponent(component SHELL_UI_COMPONENT) (ret uint32) {
 func GetScaleFactorForMonitor(hmonitor HMONITOR, scalePercent *uint32) (ret HRESULT) {
 	r0, _, _ := syscall.Syscall(procGetScaleFactorForMonitor.Addr(), 2, uintptr(hmonitor), uintptr(unsafe.Pointer(scalePercent)), 0)
 	ret = HRESULT(r0)
+	return
+}
+
+func CalculatePopupWindowPosition(anchorPoint *POINT, windowSize *SIZE, flags uint32, optionalExcludeRect *RECT, outPopupWindowPosition *RECT) (err error) {
+	r1, _, e1 := syscall.Syscall6(procCalculatePopupWindowPosition.Addr(), 5, uintptr(unsafe.Pointer(anchorPoint)), uintptr(unsafe.Pointer(windowSize)), uintptr(flags), uintptr(unsafe.Pointer(optionalExcludeRect)), uintptr(unsafe.Pointer(outPopupWindowPosition)), 0)
+	if int32(r1) == 0 {
+		err = errnoErr(e1)
+	}
 	return
 }
 
