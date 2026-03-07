@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package win
@@ -184,17 +185,17 @@ const (
 	BS_AUTOCHECKBOX    = 3
 	BS_AUTORADIOBUTTON = 9
 	BS_BITMAP          = 128
-	BS_BOTTOM          = 0X800
-	BS_CENTER          = 0X300
+	BS_BOTTOM          = 0x800
+	BS_CENTER          = 0x300
 	BS_CHECKBOX        = 2
 	BS_DEFPUSHBUTTON   = 1
 	BS_GROUPBOX        = 7
 	BS_ICON            = 64
 	BS_LEFT            = 256
 	BS_LEFTTEXT        = 32
-	BS_MULTILINE       = 0X2000
-	BS_NOTIFY          = 0X4000
-	BS_OWNERDRAW       = 0XB
+	BS_MULTILINE       = 0x2000
+	BS_NOTIFY          = 0x4000
+	BS_OWNERDRAW       = 0xB
 	BS_PUSHBUTTON      = 0
 	BS_PUSHLIKE        = 4096
 	BS_RADIOBUTTON     = 4
@@ -202,10 +203,10 @@ const (
 	BS_RIGHTBUTTON     = 32
 	BS_SPLITBUTTON     = 0x0000000c
 	BS_TEXT            = 0
-	BS_TOP             = 0X400
+	BS_TOP             = 0x400
 	BS_USERBUTTON      = 8
-	BS_VCENTER         = 0XC00
-	BS_FLAT            = 0X8000
+	BS_VCENTER         = 0xC00
+	BS_FLAT            = 0x8000
 )
 
 const (
@@ -331,101 +332,106 @@ const (
 
 // GetSystemMetrics constants
 const (
-	SM_CXSCREEN             = 0
-	SM_CYSCREEN             = 1
-	SM_CXVSCROLL            = 2
-	SM_CYHSCROLL            = 3
-	SM_CYCAPTION            = 4
-	SM_CXBORDER             = 5
-	SM_CYBORDER             = 6
-	SM_CXDLGFRAME           = 7
-	SM_CYDLGFRAME           = 8
-	SM_CYVTHUMB             = 9
-	SM_CXHTHUMB             = 10
-	SM_CXICON               = 11
-	SM_CYICON               = 12
-	SM_CXCURSOR             = 13
-	SM_CYCURSOR             = 14
-	SM_CYMENU               = 15
-	SM_CXFULLSCREEN         = 16
-	SM_CYFULLSCREEN         = 17
-	SM_CYKANJIWINDOW        = 18
-	SM_MOUSEPRESENT         = 19
-	SM_CYVSCROLL            = 20
-	SM_CXHSCROLL            = 21
-	SM_DEBUG                = 22
-	SM_SWAPBUTTON           = 23
-	SM_RESERVED1            = 24
-	SM_RESERVED2            = 25
-	SM_RESERVED3            = 26
-	SM_RESERVED4            = 27
-	SM_CXMIN                = 28
-	SM_CYMIN                = 29
-	SM_CXSIZE               = 30
-	SM_CYSIZE               = 31
-	SM_CXFRAME              = 32
-	SM_CYFRAME              = 33
-	SM_CXMINTRACK           = 34
-	SM_CYMINTRACK           = 35
-	SM_CXDOUBLECLK          = 36
-	SM_CYDOUBLECLK          = 37
-	SM_CXICONSPACING        = 38
-	SM_CYICONSPACING        = 39
-	SM_MENUDROPALIGNMENT    = 40
-	SM_PENWINDOWS           = 41
-	SM_DBCSENABLED          = 42
-	SM_CMOUSEBUTTONS        = 43
-	SM_CXFIXEDFRAME         = SM_CXDLGFRAME
-	SM_CYFIXEDFRAME         = SM_CYDLGFRAME
-	SM_CXSIZEFRAME          = SM_CXFRAME
-	SM_CYSIZEFRAME          = SM_CYFRAME
-	SM_SECURE               = 44
-	SM_CXEDGE               = 45
-	SM_CYEDGE               = 46
-	SM_CXMINSPACING         = 47
-	SM_CYMINSPACING         = 48
-	SM_CXSMICON             = 49
-	SM_CYSMICON             = 50
-	SM_CYSMCAPTION          = 51
-	SM_CXSMSIZE             = 52
-	SM_CYSMSIZE             = 53
-	SM_CXMENUSIZE           = 54
-	SM_CYMENUSIZE           = 55
-	SM_ARRANGE              = 56
-	SM_CXMINIMIZED          = 57
-	SM_CYMINIMIZED          = 58
-	SM_CXMAXTRACK           = 59
-	SM_CYMAXTRACK           = 60
-	SM_CXMAXIMIZED          = 61
-	SM_CYMAXIMIZED          = 62
-	SM_NETWORK              = 63
-	SM_CLEANBOOT            = 67
-	SM_CXDRAG               = 68
-	SM_CYDRAG               = 69
-	SM_SHOWSOUNDS           = 70
-	SM_CXMENUCHECK          = 71
-	SM_CYMENUCHECK          = 72
-	SM_SLOWMACHINE          = 73
-	SM_MIDEASTENABLED       = 74
-	SM_MOUSEWHEELPRESENT    = 75
-	SM_XVIRTUALSCREEN       = 76
-	SM_YVIRTUALSCREEN       = 77
-	SM_CXVIRTUALSCREEN      = 78
-	SM_CYVIRTUALSCREEN      = 79
-	SM_CMONITORS            = 80
-	SM_SAMEDISPLAYFORMAT    = 81
-	SM_IMMENABLED           = 82
-	SM_CXFOCUSBORDER        = 83
-	SM_CYFOCUSBORDER        = 84
-	SM_TABLETPC             = 86
-	SM_MEDIACENTER          = 87
-	SM_STARTER              = 88
-	SM_SERVERR2             = 89
-	SM_CMETRICS             = 91
-	SM_REMOTESESSION        = 0x1000
-	SM_SHUTTINGDOWN         = 0x2000
-	SM_REMOTECONTROL        = 0x2001
-	SM_CARETBLINKINGENABLED = 0x2002
+	SM_CXSCREEN                    = 0
+	SM_CYSCREEN                    = 1
+	SM_CXVSCROLL                   = 2
+	SM_CYHSCROLL                   = 3
+	SM_CYCAPTION                   = 4
+	SM_CXBORDER                    = 5
+	SM_CYBORDER                    = 6
+	SM_CXDLGFRAME                  = 7
+	SM_CYDLGFRAME                  = 8
+	SM_CYVTHUMB                    = 9
+	SM_CXHTHUMB                    = 10
+	SM_CXICON                      = 11
+	SM_CYICON                      = 12
+	SM_CXCURSOR                    = 13
+	SM_CYCURSOR                    = 14
+	SM_CYMENU                      = 15
+	SM_CXFULLSCREEN                = 16
+	SM_CYFULLSCREEN                = 17
+	SM_CYKANJIWINDOW               = 18
+	SM_MOUSEPRESENT                = 19
+	SM_CYVSCROLL                   = 20
+	SM_CXHSCROLL                   = 21
+	SM_DEBUG                       = 22
+	SM_SWAPBUTTON                  = 23
+	SM_RESERVED1                   = 24
+	SM_RESERVED2                   = 25
+	SM_RESERVED3                   = 26
+	SM_RESERVED4                   = 27
+	SM_CXMIN                       = 28
+	SM_CYMIN                       = 29
+	SM_CXSIZE                      = 30
+	SM_CYSIZE                      = 31
+	SM_CXFRAME                     = 32
+	SM_CYFRAME                     = 33
+	SM_CXMINTRACK                  = 34
+	SM_CYMINTRACK                  = 35
+	SM_CXDOUBLECLK                 = 36
+	SM_CYDOUBLECLK                 = 37
+	SM_CXICONSPACING               = 38
+	SM_CYICONSPACING               = 39
+	SM_MENUDROPALIGNMENT           = 40
+	SM_PENWINDOWS                  = 41
+	SM_DBCSENABLED                 = 42
+	SM_CMOUSEBUTTONS               = 43
+	SM_CXFIXEDFRAME                = SM_CXDLGFRAME
+	SM_CYFIXEDFRAME                = SM_CYDLGFRAME
+	SM_CXSIZEFRAME                 = SM_CXFRAME
+	SM_CYSIZEFRAME                 = SM_CYFRAME
+	SM_SECURE                      = 44
+	SM_CXEDGE                      = 45
+	SM_CYEDGE                      = 46
+	SM_CXMINSPACING                = 47
+	SM_CYMINSPACING                = 48
+	SM_CXSMICON                    = 49
+	SM_CYSMICON                    = 50
+	SM_CYSMCAPTION                 = 51
+	SM_CXSMSIZE                    = 52
+	SM_CYSMSIZE                    = 53
+	SM_CXMENUSIZE                  = 54
+	SM_CYMENUSIZE                  = 55
+	SM_ARRANGE                     = 56
+	SM_CXMINIMIZED                 = 57
+	SM_CYMINIMIZED                 = 58
+	SM_CXMAXTRACK                  = 59
+	SM_CYMAXTRACK                  = 60
+	SM_CXMAXIMIZED                 = 61
+	SM_CYMAXIMIZED                 = 62
+	SM_NETWORK                     = 63
+	SM_CLEANBOOT                   = 67
+	SM_CXDRAG                      = 68
+	SM_CYDRAG                      = 69
+	SM_SHOWSOUNDS                  = 70
+	SM_CXMENUCHECK                 = 71
+	SM_CYMENUCHECK                 = 72
+	SM_SLOWMACHINE                 = 73
+	SM_MIDEASTENABLED              = 74
+	SM_MOUSEWHEELPRESENT           = 75
+	SM_XVIRTUALSCREEN              = 76
+	SM_YVIRTUALSCREEN              = 77
+	SM_CXVIRTUALSCREEN             = 78
+	SM_CYVIRTUALSCREEN             = 79
+	SM_CMONITORS                   = 80
+	SM_SAMEDISPLAYFORMAT           = 81
+	SM_IMMENABLED                  = 82
+	SM_CXFOCUSBORDER               = 83
+	SM_CYFOCUSBORDER               = 84
+	SM_TABLETPC                    = 86
+	SM_MEDIACENTER                 = 87
+	SM_STARTER                     = 88
+	SM_SERVERR2                    = 89
+	SM_MOUSEHORIZONTALWHEELPRESENT = 91
+	SM_CXPADDEDBORDER              = 92
+	SM_DIGITIZER                   = 94
+	SM_MAXIMUMTOUCHES              = 95
+	SM_REMOTESESSION               = 0x1000
+	SM_SHUTTINGDOWN                = 0x2000
+	SM_REMOTECONTROL               = 0x2001
+	SM_CARETBLINKINGENABLED        = 0x2002
+	SM_CONVERTIBLESLATEMODE        = 0x2003
+	SM_SYSTEMDOCKED                = 0x2004
 )
 
 // ShowWindow constants
@@ -622,62 +628,63 @@ const (
 
 // Window style constants
 const (
-	WS_OVERLAPPED       = 0X00000000
-	WS_POPUP            = 0X80000000
-	WS_CHILD            = 0X40000000
-	WS_MINIMIZE         = 0X20000000
-	WS_VISIBLE          = 0X10000000
-	WS_DISABLED         = 0X08000000
-	WS_CLIPSIBLINGS     = 0X04000000
-	WS_CLIPCHILDREN     = 0X02000000
-	WS_MAXIMIZE         = 0X01000000
-	WS_CAPTION          = 0X00C00000
-	WS_BORDER           = 0X00800000
-	WS_DLGFRAME         = 0X00400000
-	WS_VSCROLL          = 0X00200000
-	WS_HSCROLL          = 0X00100000
-	WS_SYSMENU          = 0X00080000
-	WS_THICKFRAME       = 0X00040000
-	WS_GROUP            = 0X00020000
-	WS_TABSTOP          = 0X00010000
-	WS_MINIMIZEBOX      = 0X00020000
-	WS_MAXIMIZEBOX      = 0X00010000
-	WS_TILED            = 0X00000000
-	WS_ICONIC           = 0X20000000
-	WS_SIZEBOX          = 0X00040000
-	WS_OVERLAPPEDWINDOW = 0X00000000 | 0X00C00000 | 0X00080000 | 0X00040000 | 0X00020000 | 0X00010000
-	WS_POPUPWINDOW      = 0X80000000 | 0X00800000 | 0X00080000
-	WS_CHILDWINDOW      = 0X40000000
+	WS_OVERLAPPED       = 0x00000000
+	WS_POPUP            = 0x80000000
+	WS_CHILD            = 0x40000000
+	WS_MINIMIZE         = 0x20000000
+	WS_VISIBLE          = 0x10000000
+	WS_DISABLED         = 0x08000000
+	WS_CLIPSIBLINGS     = 0x04000000
+	WS_CLIPCHILDREN     = 0x02000000
+	WS_MAXIMIZE         = 0x01000000
+	WS_CAPTION          = 0x00C00000
+	WS_BORDER           = 0x00800000
+	WS_DLGFRAME         = 0x00400000
+	WS_VSCROLL          = 0x00200000
+	WS_HSCROLL          = 0x00100000
+	WS_SYSMENU          = 0x00080000
+	WS_THICKFRAME       = 0x00040000
+	WS_GROUP            = 0x00020000
+	WS_TABSTOP          = 0x00010000
+	WS_MINIMIZEBOX      = 0x00020000
+	WS_MAXIMIZEBOX      = 0x00010000
+	WS_TILED            = 0x00000000
+	WS_ICONIC           = 0x20000000
+	WS_SIZEBOX          = 0x00040000
+	WS_OVERLAPPEDWINDOW = 0x00000000 | 0x00C00000 | 0x00080000 | 0x00040000 | 0x00020000 | 0x00010000
+	WS_POPUPWINDOW      = 0x80000000 | 0x00800000 | 0x00080000
+	WS_CHILDWINDOW      = 0x40000000
 )
 
 // Extended window style constants
 const (
-	WS_EX_DLGMODALFRAME    = 0X00000001
-	WS_EX_NOPARENTNOTIFY   = 0X00000004
-	WS_EX_TOPMOST          = 0X00000008
-	WS_EX_ACCEPTFILES      = 0X00000010
-	WS_EX_TRANSPARENT      = 0X00000020
-	WS_EX_MDICHILD         = 0X00000040
-	WS_EX_TOOLWINDOW       = 0X00000080
-	WS_EX_WINDOWEDGE       = 0X00000100
-	WS_EX_CLIENTEDGE       = 0X00000200
-	WS_EX_CONTEXTHELP      = 0X00000400
-	WS_EX_RIGHT            = 0X00001000
-	WS_EX_LEFT             = 0X00000000
-	WS_EX_RTLREADING       = 0X00002000
-	WS_EX_LTRREADING       = 0X00000000
-	WS_EX_LEFTSCROLLBAR    = 0X00004000
-	WS_EX_RIGHTSCROLLBAR   = 0X00000000
-	WS_EX_CONTROLPARENT    = 0X00010000
-	WS_EX_STATICEDGE       = 0X00020000
-	WS_EX_APPWINDOW        = 0X00040000
-	WS_EX_OVERLAPPEDWINDOW = 0X00000100 | 0X00000200
-	WS_EX_PALETTEWINDOW    = 0X00000100 | 0X00000080 | 0X00000008
-	WS_EX_LAYERED          = 0X00080000
-	WS_EX_NOINHERITLAYOUT  = 0X00100000
-	WS_EX_LAYOUTRTL        = 0X00400000
-	WS_EX_COMPOSITED       = 0X02000000
-	WS_EX_NOACTIVATE       = 0X08000000
+	WS_EX_DLGMODALFRAME       = 0x00000001
+	WS_EX_NOPARENTNOTIFY      = 0x00000004
+	WS_EX_TOPMOST             = 0x00000008
+	WS_EX_ACCEPTFILES         = 0x00000010
+	WS_EX_TRANSPARENT         = 0x00000020
+	WS_EX_MDICHILD            = 0x00000040
+	WS_EX_TOOLWINDOW          = 0x00000080
+	WS_EX_WINDOWEDGE          = 0x00000100
+	WS_EX_CLIENTEDGE          = 0x00000200
+	WS_EX_CONTEXTHELP         = 0x00000400
+	WS_EX_RIGHT               = 0x00001000
+	WS_EX_LEFT                = 0x00000000
+	WS_EX_RTLREADING          = 0x00002000
+	WS_EX_LTRREADING          = 0x00000000
+	WS_EX_LEFTSCROLLBAR       = 0x00004000
+	WS_EX_RIGHTSCROLLBAR      = 0x00000000
+	WS_EX_CONTROLPARENT       = 0x00010000
+	WS_EX_STATICEDGE          = 0x00020000
+	WS_EX_APPWINDOW           = 0x00040000
+	WS_EX_OVERLAPPEDWINDOW    = 0x00000100 | 0x00000200
+	WS_EX_PALETTEWINDOW       = 0x00000100 | 0x00000080 | 0x00000008
+	WS_EX_LAYERED             = 0x00080000
+	WS_EX_NOINHERITLAYOUT     = 0x00100000
+	WS_EX_NOREDIRECTIONBITMAP = 0x00200000
+	WS_EX_LAYOUTRTL           = 0x00400000
+	WS_EX_COMPOSITED          = 0x02000000
+	WS_EX_NOACTIVATE          = 0x08000000
 )
 
 // Window message constants
@@ -750,7 +757,7 @@ const (
 	WM_INITDIALOG             = 272
 	WM_INITMENU               = 278
 	WM_INITMENUPOPUP          = 279
-	WM_INPUT                  = 0X00FF
+	WM_INPUT                  = 0x00FF
 	WM_INPUTLANGCHANGE        = 81
 	WM_INPUTLANGCHANGEREQUEST = 80
 	WM_KEYDOWN                = 256
@@ -769,16 +776,16 @@ const (
 	WM_MDISETMENU             = 560
 	WM_MDITILE                = 550
 	WM_MEASUREITEM            = 44
-	WM_GETOBJECT              = 0X003D
-	WM_CHANGEUISTATE          = 0X0127
-	WM_UPDATEUISTATE          = 0X0128
-	WM_QUERYUISTATE           = 0X0129
-	WM_UNINITMENUPOPUP        = 0X0125
+	WM_GETOBJECT              = 0x003D
+	WM_CHANGEUISTATE          = 0x0127
+	WM_UPDATEUISTATE          = 0x0128
+	WM_QUERYUISTATE           = 0x0129
+	WM_UNINITMENUPOPUP        = 0x0125
 	WM_MENURBUTTONUP          = 290
-	WM_MENUCOMMAND            = 0X0126
-	WM_MENUGETOBJECT          = 0X0124
-	WM_MENUDRAG               = 0X0123
-	WM_APPCOMMAND             = 0X0319
+	WM_MENUCOMMAND            = 0x0126
+	WM_MENUGETOBJECT          = 0x0124
+	WM_MENUDRAG               = 0x0123
+	WM_APPCOMMAND             = 0x0319
 	WM_MENUCHAR               = 288
 	WM_MENUSELECT             = 287
 	WM_MOVE                   = 3
@@ -797,8 +804,8 @@ const (
 	WM_NCXBUTTONDOWN          = 171
 	WM_NCXBUTTONUP            = 172
 	WM_NCXBUTTONDBLCLK        = 173
-	WM_NCMOUSEHOVER           = 0X02A0
-	WM_NCMOUSELEAVE           = 0X02A2
+	WM_NCMOUSEHOVER           = 0x02A0
+	WM_NCMOUSELEAVE           = 0x02A2
 	WM_NCMOUSEMOVE            = 160
 	WM_NCPAINT                = 133
 	WM_NCRBUTTONDBLCLK        = 166
@@ -884,52 +891,137 @@ const (
 	WM_XBUTTONUP              = 524
 	WM_XBUTTONDBLCLK          = 525
 	WM_MOUSELAST              = 525
-	WM_MOUSEHOVER             = 0X2A1
-	WM_MOUSELEAVE             = 0X2A3
+	WM_MOUSEHOVER             = 0x2A1
+	WM_MOUSELEAVE             = 0x2A3
 	WM_CLIPBOARDUPDATE        = 0x031D
+	WM_UNICHAR                = 0x0109
+)
+
+// Dialog box message constants
+const (
+	DM_GETDEFID   = WM_USER
+	DM_SETDEFID   = WM_USER + 1
+	DM_REPOSITION = WM_USER + 2
+)
+
+const DC_HASDEFID = 0x534B
+
+const (
+	CHILDID_SELF      = 0
+	INDEXID_OBJECT    = 0
+	INDEXID_CONTAINER = 0
+
+	OBJID_WINDOW            = int32(0x00000000)
+	OBJID_SYSMENU           = int32(-((0xFFFFFFFF ^ 0xFFFFFFFF) + 1))
+	OBJID_TITLEBAR          = int32(-((0xFFFFFFFE ^ 0xFFFFFFFF) + 1))
+	OBJID_MENU              = int32(-((0xFFFFFFFD ^ 0xFFFFFFFF) + 1))
+	OBJID_CLIENT            = int32(-((0xFFFFFFFC ^ 0xFFFFFFFF) + 1))
+	OBJID_VSCROLL           = int32(-((0xFFFFFFFB ^ 0xFFFFFFFF) + 1))
+	OBJID_HSCROLL           = int32(-((0xFFFFFFFA ^ 0xFFFFFFFF) + 1))
+	OBJID_SIZEGRIP          = int32(-((0xFFFFFFF9 ^ 0xFFFFFFFF) + 1))
+	OBJID_CARET             = int32(-((0xFFFFFFF8 ^ 0xFFFFFFFF) + 1))
+	OBJID_CURSOR            = int32(-((0xFFFFFFF7 ^ 0xFFFFFFFF) + 1))
+	OBJID_ALERT             = int32(-((0xFFFFFFF6 ^ 0xFFFFFFFF) + 1))
+	OBJID_SOUND             = int32(-((0xFFFFFFF5 ^ 0xFFFFFFFF) + 1))
+	OBJID_QUERYCLASSNAMEIDX = int32(-((0xFFFFFFF4 ^ 0xFFFFFFFF) + 1))
+	OBJID_NATIVEOM          = int32(-((0xFFFFFFF0 ^ 0xFFFFFFFF) + 1))
 )
 
 // event constants
 const (
-	EVENT_OBJECT_CREATE                   = 0x8000
-	EVENT_OBJECT_DESTROY                  = 0x8001
-	EVENT_OBJECT_SHOW                     = 0x8002
-	EVENT_OBJECT_HIDE                     = 0x8003
-	EVENT_OBJECT_REORDER                  = 0x8004
-	EVENT_OBJECT_FOCUS                    = 0x8005
-	EVENT_OBJECT_SELECTION                = 0x8006
-	EVENT_OBJECT_SELECTIONADD             = 0x8007
-	EVENT_OBJECT_SELECTIONREMOVE          = 0x8008
-	EVENT_OBJECT_SELECTIONWITHIN          = 0x8009
-	EVENT_OBJECT_STATECHANGE              = 0x800A
-	EVENT_OBJECT_LOCATIONCHANGE           = 0x800B
-	EVENT_OBJECT_NAMECHANGE               = 0x800C
-	EVENT_OBJECT_DESCRIPTIONCHANGE        = 0x800D
-	EVENT_OBJECT_VALUECHANGE              = 0x800E
-	EVENT_OBJECT_PARENTCHANGE             = 0x800F
-	EVENT_OBJECT_HELPCHANGE               = 0x8010
-	EVENT_OBJECT_DEFACTIONCHANGE          = 0x8011
-	EVENT_OBJECT_ACCELERATORCHANGE        = 0x8012
-	EVENT_OBJECT_INVOKED                  = 0x8013
-	EVENT_OBJECT_TEXTSELECTIONCHANGED     = 0x8014
-	EVENT_OBJECT_CONTENTSCROLLED          = 0x8015
-	EVENT_SYSTEM_ARRANGMENTPREVIEW        = 0x8016
-	EVENT_OBJECT_CLOAKED                  = 0x8017
-	EVENT_OBJECT_UNCLOAKED                = 0x8018
-	EVENT_OBJECT_LIVEREGIONCHANGED        = 0x8019
-	EVENT_OBJECT_HOSTEDOBJECTSINVALIDATED = 0x8020
-	EVENT_OBJECT_DRAGSTART                = 0x8021
-	EVENT_OBJECT_DRAGCANCEL               = 0x8022
-	EVENT_OBJECT_DRAGCOMPLETE             = 0x8023
-	EVENT_OBJECT_DRAGENTER                = 0x8024
-	EVENT_OBJECT_DRAGLEAVE                = 0x8025
-	EVENT_OBJECT_DRAGDROPPED              = 0x8026
-	EVENT_OBJECT_IME_SHOW                 = 0x8027
-	EVENT_OBJECT_IME_HIDE                 = 0x8028
-	EVENT_OBJECT_IME_CHANGE               = 0x8029
-	EVENT_OBJECT_END                      = 0x80ff
-	EVENT_AIA_START                       = 0xa000
-	EVENT_AIA_END                         = 0xafff
+	EVENT_MIN = 0x00000001
+	EVENT_MAX = 0x7FFFFFFF
+
+	EVENT_SYSTEM_SOUND                  = 0x0001
+	EVENT_SYSTEM_ALERT                  = 0x0002
+	EVENT_SYSTEM_FOREGROUND             = 0x0003
+	EVENT_SYSTEM_MENUSTART              = 0x0004
+	EVENT_SYSTEM_MENUEND                = 0x0005
+	EVENT_SYSTEM_MENUPOPUPSTART         = 0x0006
+	EVENT_SYSTEM_MENUPOPUPEND           = 0x0007
+	EVENT_SYSTEM_CAPTURESTART           = 0x0008
+	EVENT_SYSTEM_CAPTUREEND             = 0x0009
+	EVENT_SYSTEM_MOVESIZESTART          = 0x000A
+	EVENT_SYSTEM_MOVESIZEEND            = 0x000B
+	EVENT_SYSTEM_CONTEXTHELPSTART       = 0x000C
+	EVENT_SYSTEM_CONTEXTHELPEND         = 0x000D
+	EVENT_SYSTEM_DRAGDROPSTART          = 0x000E
+	EVENT_SYSTEM_DRAGDROPEND            = 0x000F
+	EVENT_SYSTEM_DIALOGSTART            = 0x0010
+	EVENT_SYSTEM_DIALOGEND              = 0x0011
+	EVENT_SYSTEM_SCROLLINGSTART         = 0x0012
+	EVENT_SYSTEM_SCROLLINGEND           = 0x0013
+	EVENT_SYSTEM_SWITCHSTART            = 0x0014
+	EVENT_SYSTEM_SWITCHEND              = 0x0015
+	EVENT_SYSTEM_MINIMIZESTART          = 0x0016
+	EVENT_SYSTEM_MINIMIZEEND            = 0x0017
+	EVENT_SYSTEM_DESKTOPSWITCH          = 0x0020
+	EVENT_SYSTEM_SWITCHER_APPGRABBED    = 0x0024
+	EVENT_SYSTEM_SWITCHER_APPOVERTARGET = 0x0025
+	EVENT_SYSTEM_SWITCHER_APPDROPPED    = 0x0026
+	EVENT_SYSTEM_SWITCHER_CANCELLED     = 0x0027
+	EVENT_SYSTEM_IME_KEY_NOTIFICATION   = 0x0029
+	EVENT_SYSTEM_END                    = 0x00FF
+
+	EVENT_OEM_DEFINED_START = 0x0101
+	EVENT_OEM_DEFINED_END   = 0x01FF
+
+	EVENT_CONSOLE_CARET             = 0x4001
+	EVENT_CONSOLE_UPDATE_REGION     = 0x4002
+	EVENT_CONSOLE_UPDATE_SIMPLE     = 0x4003
+	EVENT_CONSOLE_UPDATE_SCROLL     = 0x4004
+	EVENT_CONSOLE_LAYOUT            = 0x4005
+	EVENT_CONSOLE_START_APPLICATION = 0x4006
+	EVENT_CONSOLE_END_APPLICATION   = 0x4007
+	EVENT_CONSOLE_END               = 0x40FF
+
+	EVENT_UIA_EVENTID_START = 0x4E00
+	EVENT_UIA_EVENTID_END   = 0x4EFF
+
+	EVENT_UIA_PROPID_START = 0x7500
+	EVENT_UIA_PROPID_END   = 0x75FF
+
+	EVENT_OBJECT_CREATE                           = 0x8000
+	EVENT_OBJECT_DESTROY                          = 0x8001
+	EVENT_OBJECT_SHOW                             = 0x8002
+	EVENT_OBJECT_HIDE                             = 0x8003
+	EVENT_OBJECT_REORDER                          = 0x8004
+	EVENT_OBJECT_FOCUS                            = 0x8005
+	EVENT_OBJECT_SELECTION                        = 0x8006
+	EVENT_OBJECT_SELECTIONADD                     = 0x8007
+	EVENT_OBJECT_SELECTIONREMOVE                  = 0x8008
+	EVENT_OBJECT_SELECTIONWITHIN                  = 0x8009
+	EVENT_OBJECT_STATECHANGE                      = 0x800A
+	EVENT_OBJECT_LOCATIONCHANGE                   = 0x800B
+	EVENT_OBJECT_NAMECHANGE                       = 0x800C
+	EVENT_OBJECT_DESCRIPTIONCHANGE                = 0x800D
+	EVENT_OBJECT_VALUECHANGE                      = 0x800E
+	EVENT_OBJECT_PARENTCHANGE                     = 0x800F
+	EVENT_OBJECT_HELPCHANGE                       = 0x8010
+	EVENT_OBJECT_DEFACTIONCHANGE                  = 0x8011
+	EVENT_OBJECT_ACCELERATORCHANGE                = 0x8012
+	EVENT_OBJECT_INVOKED                          = 0x8013
+	EVENT_OBJECT_TEXTSELECTIONCHANGED             = 0x8014
+	EVENT_OBJECT_CONTENTSCROLLED                  = 0x8015
+	EVENT_SYSTEM_ARRANGMENTPREVIEW                = 0x8016
+	EVENT_OBJECT_CLOAKED                          = 0x8017
+	EVENT_OBJECT_UNCLOAKED                        = 0x8018
+	EVENT_OBJECT_LIVEREGIONCHANGED                = 0x8019
+	EVENT_OBJECT_HOSTEDOBJECTSINVALIDATED         = 0x8020
+	EVENT_OBJECT_DRAGSTART                        = 0x8021
+	EVENT_OBJECT_DRAGCANCEL                       = 0x8022
+	EVENT_OBJECT_DRAGCOMPLETE                     = 0x8023
+	EVENT_OBJECT_DRAGENTER                        = 0x8024
+	EVENT_OBJECT_DRAGLEAVE                        = 0x8025
+	EVENT_OBJECT_DRAGDROPPED                      = 0x8026
+	EVENT_OBJECT_IME_SHOW                         = 0x8027
+	EVENT_OBJECT_IME_HIDE                         = 0x8028
+	EVENT_OBJECT_IME_CHANGE                       = 0x8029
+	EVENT_OBJECT_TEXTEDIT_CONVERSIONTARGETCHANGED = 0x8030
+	EVENT_OBJECT_END                              = 0x80FF
+
+	EVENT_AIA_START = 0xa000
+	EVENT_AIA_END   = 0xafff
 
 	WINEVENT_OUTOFCONTEXT   = 0x0000
 	WINEVENT_SKIPOWNTHREAD  = 0x0001
@@ -967,6 +1059,7 @@ const (
 	TPM_VERPOSANIMATION = 0x1000
 	TPM_HORIZONTAL      = 0x0000
 	TPM_VERTICAL        = 0x0040
+	TPM_WORKAREA        = 0x10000
 )
 
 // WINDOWPLACEMENT flags
@@ -1025,8 +1118,9 @@ const (
 
 // SystemParametersInfo actions
 const (
-	SPI_GETNONCLIENTMETRICS = 0x0029
-	SPI_GETHIGHCONTRAST     = 0x0042
+	SPI_GETCLIENTAREAANIMATION = 0x1042
+	SPI_GETNONCLIENTMETRICS    = 0x0029
+	SPI_GETHIGHCONTRAST        = 0x0042
 )
 
 // Dialog styles
@@ -1080,13 +1174,17 @@ const (
 
 // Owner drawing states
 const (
-	ODS_CHECKED      = 0x0001
-	ODS_COMBOBOXEDIT = 0x0002
-	ODS_DEFAULT      = 0x0004
-	ODS_DISABLED     = 0x0008
+	ODS_SELECTED     = 0x0001
+	ODS_GRAYED       = 0x0002
+	ODS_DISABLED     = 0x0004
+	ODS_CHECKED      = 0x0008
 	ODS_FOCUS        = 0x0010
-	ODS_GRAYED       = 0x0020
-	ODS_SELECTED     = 0x0040
+	ODS_DEFAULT      = 0x0020
+	ODS_COMBOBOXEDIT = 0x1000
+	ODS_HOTLIGHT     = 0x0040
+	ODS_INACTIVE     = 0x0080
+	ODS_NOACCEL      = 0x0100
+	ODS_NOFOCUSRECT  = 0x0200
 )
 
 // Raw input device flags
@@ -1379,6 +1477,42 @@ const (
 	WB_LEFT        = 0
 	WB_RIGHT       = 1
 	WB_ISDELIMITER = 2
+)
+
+// Owner-draw control types
+const (
+	ODT_MENU     = 1
+	ODT_LISTBOX  = 2
+	ODT_COMBOBOX = 3
+	ODT_BUTTON   = 4
+	ODT_STATIC   = 5
+)
+
+type ResourceType uint16
+
+// Resource types
+const (
+	RT_CURSOR       ResourceType = 1
+	RT_BITMAP       ResourceType = 2
+	RT_ICON         ResourceType = 3
+	RT_MENU         ResourceType = 4
+	RT_DIALOG       ResourceType = 5
+	RT_STRING       ResourceType = 6
+	RT_FONTDIR      ResourceType = 7
+	RT_FONT         ResourceType = 8
+	RT_ACCELERATOR  ResourceType = 9
+	RT_RCDATA       ResourceType = 10
+	RT_MESSAGETABLE ResourceType = 11
+	RT_GROUP_CURSOR ResourceType = RT_CURSOR + 11
+	RT_GROUP_ICON   ResourceType = RT_ICON + 11
+	RT_VERSION      ResourceType = 16
+	RT_DLGINCLUDE   ResourceType = 17
+	RT_PLUGPLAY     ResourceType = 19
+	RT_VXD          ResourceType = 20
+	RT_ANICURSOR    ResourceType = 21
+	RT_ANIICON      ResourceType = 22
+	RT_HTML         ResourceType = 23
+	RT_MANIFEST     ResourceType = 24
 )
 
 type NMBCDROPDOWN struct {
@@ -1699,6 +1833,7 @@ var (
 	createWindowEx              *windows.LazyProc
 	deferWindowPos              *windows.LazyProc
 	defWindowProc               *windows.LazyProc
+	deleteMenu                  *windows.LazyProc
 	destroyIcon                 *windows.LazyProc
 	destroyMenu                 *windows.LazyProc
 	destroyWindow               *windows.LazyProc
@@ -1709,11 +1844,13 @@ var (
 	drawFocusRect               *windows.LazyProc
 	drawTextEx                  *windows.LazyProc
 	emptyClipboard              *windows.LazyProc
+	enableMenuItem              *windows.LazyProc
 	enableWindow                *windows.LazyProc
 	endDeferWindowPos           *windows.LazyProc
 	endDialog                   *windows.LazyProc
 	endPaint                    *windows.LazyProc
 	enumChildWindows            *windows.LazyProc
+	fillRect                    *windows.LazyProc
 	findWindow                  *windows.LazyProc
 	getActiveWindow             *windows.LazyProc
 	getAncestor                 *windows.LazyProc
@@ -1730,12 +1867,17 @@ var (
 	getForegroundWindow         *windows.LazyProc
 	getIconInfo                 *windows.LazyProc
 	getKeyState                 *windows.LazyProc
+	getMenuCheckMarkDimensions  *windows.LazyProc
 	getMenuInfo                 *windows.LazyProc
+	getMenuItemCount            *windows.LazyProc
+	getMenuItemID               *windows.LazyProc
+	getMenuItemInfo             *windows.LazyProc
 	getMessage                  *windows.LazyProc
 	getMonitorInfo              *windows.LazyProc
 	getParent                   *windows.LazyProc
 	getRawInputData             *windows.LazyProc
 	getScrollInfo               *windows.LazyProc
+	getSubMenu                  *windows.LazyProc
 	getSysColor                 *windows.LazyProc
 	getSysColorBrush            *windows.LazyProc
 	getSystemMenu               *windows.LazyProc
@@ -1766,11 +1908,13 @@ var (
 	messageBox                  *windows.LazyProc
 	monitorFromWindow           *windows.LazyProc
 	moveWindow                  *windows.LazyProc
+	notifyWinEvent              *windows.LazyProc
 	unregisterClass             *windows.LazyProc
 	openClipboard               *windows.LazyProc
 	peekMessage                 *windows.LazyProc
 	postMessage                 *windows.LazyProc
 	postQuitMessage             *windows.LazyProc
+	redrawWindow                *windows.LazyProc
 	registerClassEx             *windows.LazyProc
 	registerRawInputDevices     *windows.LazyProc
 	registerWindowMessage       *windows.LazyProc
@@ -1791,6 +1935,7 @@ var (
 	setMenu                     *windows.LazyProc
 	setMenuDefaultItem          *windows.LazyProc
 	setMenuInfo                 *windows.LazyProc
+	setMenuItemBitmaps          *windows.LazyProc
 	setMenuItemInfo             *windows.LazyProc
 	setParent                   *windows.LazyProc
 	setRect                     *windows.LazyProc
@@ -1804,10 +1949,12 @@ var (
 	showWindow                  *windows.LazyProc
 	systemParametersInfo        *windows.LazyProc
 	trackMouseEvent             *windows.LazyProc
+	trackPopupMenu              *windows.LazyProc
 	trackPopupMenuEx            *windows.LazyProc
 	translateMessage            *windows.LazyProc
 	unhookWinEvent              *windows.LazyProc
 	updateWindow                *windows.LazyProc
+	vkKeyScan                   *windows.LazyProc
 	windowFromDC                *windows.LazyProc
 	windowFromPoint             *windows.LazyProc
 )
@@ -1838,6 +1985,7 @@ func init() {
 	createWindowEx = libuser32.NewProc("CreateWindowExW")
 	deferWindowPos = libuser32.NewProc("DeferWindowPos")
 	defWindowProc = libuser32.NewProc("DefWindowProcW")
+	deleteMenu = libuser32.NewProc("DeleteMenu")
 	destroyIcon = libuser32.NewProc("DestroyIcon")
 	destroyMenu = libuser32.NewProc("DestroyMenu")
 	destroyWindow = libuser32.NewProc("DestroyWindow")
@@ -1848,11 +1996,13 @@ func init() {
 	drawMenuBar = libuser32.NewProc("DrawMenuBar")
 	drawTextEx = libuser32.NewProc("DrawTextExW")
 	emptyClipboard = libuser32.NewProc("EmptyClipboard")
+	enableMenuItem = libuser32.NewProc("EnableMenuItem")
 	enableWindow = libuser32.NewProc("EnableWindow")
 	endDeferWindowPos = libuser32.NewProc("EndDeferWindowPos")
 	endDialog = libuser32.NewProc("EndDialog")
 	endPaint = libuser32.NewProc("EndPaint")
 	enumChildWindows = libuser32.NewProc("EnumChildWindows")
+	fillRect = libuser32.NewProc("FillRect")
 	findWindow = libuser32.NewProc("FindWindowW")
 	getActiveWindow = libuser32.NewProc("GetActiveWindow")
 	getAncestor = libuser32.NewProc("GetAncestor")
@@ -1869,12 +2019,17 @@ func init() {
 	getForegroundWindow = libuser32.NewProc("GetForegroundWindow")
 	getIconInfo = libuser32.NewProc("GetIconInfo")
 	getKeyState = libuser32.NewProc("GetKeyState")
+	getMenuCheckMarkDimensions = libuser32.NewProc("GetMenuCheckMarkDimensions")
 	getMenuInfo = libuser32.NewProc("GetMenuInfo")
+	getMenuItemCount = libuser32.NewProc("GetMenuItemCount")
+	getMenuItemID = libuser32.NewProc("GetMenuItemID")
+	getMenuItemInfo = libuser32.NewProc("GetMenuItemInfoW")
 	getMessage = libuser32.NewProc("GetMessageW")
 	getMonitorInfo = libuser32.NewProc("GetMonitorInfoW")
 	getParent = libuser32.NewProc("GetParent")
 	getRawInputData = libuser32.NewProc("GetRawInputData")
 	getScrollInfo = libuser32.NewProc("GetScrollInfo")
+	getSubMenu = libuser32.NewProc("GetSubMenu")
 	getSysColor = libuser32.NewProc("GetSysColor")
 	getSysColorBrush = libuser32.NewProc("GetSysColorBrush")
 	getSystemMenu = libuser32.NewProc("GetSystemMenu")
@@ -1910,11 +2065,13 @@ func init() {
 	messageBox = libuser32.NewProc("MessageBoxW")
 	monitorFromWindow = libuser32.NewProc("MonitorFromWindow")
 	moveWindow = libuser32.NewProc("MoveWindow")
+	notifyWinEvent = libuser32.NewProc("NotifyWinEvent")
 	unregisterClass = libuser32.NewProc("UnregisterClassW")
 	openClipboard = libuser32.NewProc("OpenClipboard")
 	peekMessage = libuser32.NewProc("PeekMessageW")
 	postMessage = libuser32.NewProc("PostMessageW")
 	postQuitMessage = libuser32.NewProc("PostQuitMessage")
+	redrawWindow = libuser32.NewProc("RedrawWindow")
 	registerClassEx = libuser32.NewProc("RegisterClassExW")
 	registerRawInputDevices = libuser32.NewProc("RegisterRawInputDevices")
 	registerWindowMessage = libuser32.NewProc("RegisterWindowMessageW")
@@ -1935,6 +2092,7 @@ func init() {
 	setMenu = libuser32.NewProc("SetMenu")
 	setMenuDefaultItem = libuser32.NewProc("SetMenuDefaultItem")
 	setMenuInfo = libuser32.NewProc("SetMenuInfo")
+	setMenuItemBitmaps = libuser32.NewProc("SetMenuItemBitmaps")
 	setMenuItemInfo = libuser32.NewProc("SetMenuItemInfoW")
 	setRect = libuser32.NewProc("SetRect")
 	setParent = libuser32.NewProc("SetParent")
@@ -1953,10 +2111,12 @@ func init() {
 	showWindow = libuser32.NewProc("ShowWindow")
 	systemParametersInfo = libuser32.NewProc("SystemParametersInfoW")
 	trackMouseEvent = libuser32.NewProc("TrackMouseEvent")
+	trackPopupMenu = libuser32.NewProc("TrackPopupMenu")
 	trackPopupMenuEx = libuser32.NewProc("TrackPopupMenuEx")
 	translateMessage = libuser32.NewProc("TranslateMessage")
 	unhookWinEvent = libuser32.NewProc("UnhookWinEvent")
 	updateWindow = libuser32.NewProc("UpdateWindow")
+	vkKeyScan = libuser32.NewProc("VkKeyScanW")
 	windowFromDC = libuser32.NewProc("WindowFromDC")
 	windowFromPoint = libuser32.NewProc("WindowFromPoint")
 }
@@ -2174,6 +2334,15 @@ func DefWindowProc(hWnd HWND, Msg uint32, wParam, lParam uintptr) uintptr {
 	return ret
 }
 
+func DeleteMenu(hMenu HMENU, uPosition uint32, uFlags uint32) bool {
+	ret, _, _ := syscall.Syscall(deleteMenu.Addr(), 3,
+		uintptr(hMenu),
+		uintptr(uPosition),
+		uintptr(uFlags))
+
+	return ret != 0
+}
+
 func DestroyIcon(hIcon HICON) bool {
 	ret, _, _ := syscall.Syscall(destroyIcon.Addr(), 1,
 		uintptr(hIcon),
@@ -2276,6 +2445,15 @@ func EmptyClipboard() bool {
 	return ret != 0
 }
 
+func EnableMenuItem(hMenu HMENU, uIDEnableItem uint32, uEnable uint32) bool {
+	ret, _, _ := syscall.Syscall(enableMenuItem.Addr(), 3,
+		uintptr(hMenu),
+		uintptr(uIDEnableItem),
+		uintptr(uEnable))
+
+	return ret != 0
+}
+
 func EnableWindow(hWnd HWND, bEnable bool) bool {
 	ret, _, _ := syscall.Syscall(enableWindow.Addr(), 2,
 		uintptr(hWnd),
@@ -2318,6 +2496,15 @@ func EnumChildWindows(hWndParent HWND, lpEnumFunc, lParam uintptr) bool {
 		lpEnumFunc,
 		lParam)
 
+	return ret != 0
+}
+
+func FillRect(hdc HDC, rect *RECT, hbrush HBRUSH) bool {
+	ret, _, _ := syscall.Syscall(fillRect.Addr(), 3,
+		uintptr(hdc),
+		uintptr(unsafe.Pointer(rect)),
+		uintptr(hbrush),
+	)
 	return ret != 0
 }
 
@@ -2474,10 +2661,49 @@ func GetKeyState(nVirtKey int32) int16 {
 	return int16(ret)
 }
 
+func GetMenuCheckMarkDimensions() int32 {
+	ret, _, _ := syscall.Syscall(getMenuCheckMarkDimensions.Addr(), 0,
+		0,
+		0,
+		0)
+
+	return int32(ret)
+}
+
 func GetMenuInfo(hmenu HMENU, lpcmi *MENUINFO) bool {
 	ret, _, _ := syscall.Syscall(getMenuInfo.Addr(), 2,
 		uintptr(hmenu),
 		uintptr(unsafe.Pointer(lpcmi)),
+		0)
+
+	return ret != 0
+}
+
+func GetMenuItemCount(hMenu HMENU) int32 {
+	ret, _, _ := syscall.Syscall(getMenuItemCount.Addr(), 1,
+		uintptr(hMenu),
+		0,
+		0)
+
+	return int32(ret)
+}
+
+func GetMenuItemID(hMenu HMENU, nPos int32) uint32 {
+	ret, _, _ := syscall.Syscall(getMenuItemID.Addr(), 2,
+		uintptr(hMenu),
+		uintptr(nPos),
+		0)
+
+	return uint32(ret)
+}
+
+func GetMenuItemInfo(hmenu HMENU, item uint32, fByPosition BOOL, lpmii *MENUITEMINFO) bool {
+	ret, _, _ := syscall.Syscall6(getMenuItemInfo.Addr(), 4,
+		uintptr(hmenu),
+		uintptr(item),
+		uintptr(fByPosition),
+		uintptr(unsafe.Pointer(lpmii)),
+		0,
 		0)
 
 	return ret != 0
@@ -2532,6 +2758,15 @@ func GetScrollInfo(hwnd HWND, fnBar int32, lpsi *SCROLLINFO) bool {
 		uintptr(unsafe.Pointer(lpsi)))
 
 	return ret != 0
+}
+
+func GetSubMenu(hMenu HMENU, nPos int32) HMENU {
+	ret, _, _ := syscall.Syscall(getSubMenu.Addr(), 2,
+		uintptr(hMenu),
+		uintptr(nPos),
+		0)
+
+	return HMENU(ret)
 }
 
 func GetSysColor(nIndex int) uint32 {
@@ -2780,7 +3015,7 @@ func LoadString(instRes HINSTANCE, id uint32, buf *uint16, length int32) int32 {
 //	MB_ICONHAND (See MB_ICONERROR)
 //	MB_ICONINFORMATION (The sounds specified as the Windows Asterisk sound)
 //	MB_ICONQUESTION (The sound specified as the Windows Question sound)
-// 	MB_ICONSTOP (See MB_ICONERROR)
+//	MB_ICONSTOP (See MB_ICONERROR)
 //	MB_ICONWARNING (The sounds specified as the Windows Exclamation sound)
 //	MB_OK (The sound specified as the Windows Default Beep sound)
 //
@@ -2825,6 +3060,16 @@ func MoveWindow(hWnd HWND, x, y, width, height int32, repaint bool) bool {
 		uintptr(BoolToBOOL(repaint)))
 
 	return ret != 0
+}
+
+func NotifyWinEvent(event uint32, hwnd HWND, idObject, idChild int32) {
+	syscall.Syscall6(notifyWinEvent.Addr(), 4,
+		uintptr(event),
+		uintptr(hwnd),
+		uintptr(idObject),
+		uintptr(idChild),
+		0,
+		0)
 }
 
 func UnregisterClass(name *uint16) bool {
@@ -2874,6 +3119,38 @@ func PostQuitMessage(exitCode int32) {
 		uintptr(exitCode),
 		0,
 		0)
+}
+
+const (
+	// RedrawWindow() flags
+	RDW_INVALIDATE    = 0x0001
+	RDW_INTERNALPAINT = 0x0002
+	RDW_ERASE         = 0x0004
+
+	RDW_VALIDATE        = 0x0008
+	RDW_NOINTERNALPAINT = 0x0010
+	RDW_NOERASE         = 0x0020
+
+	RDW_NOCHILDREN  = 0x0040
+	RDW_ALLCHILDREN = 0x0080
+
+	RDW_UPDATENOW = 0x0100
+	RDW_ERASENOW  = 0x0200
+
+	RDW_FRAME   = 0x0400
+	RDW_NOFRAME = 0x0800
+)
+
+func RedrawWindow(hWnd HWND, lprcUpdate *RECT, hrgnUpdate HRGN, flags uint32) bool {
+	ret, _, _ := syscall.Syscall6(redrawWindow.Addr(), 4,
+		uintptr(hWnd),
+		uintptr(unsafe.Pointer(lprcUpdate)),
+		uintptr(hrgnUpdate),
+		uintptr(flags),
+		0,
+		0)
+
+	return ret != 0
 }
 
 func RegisterClassEx(windowClass *WNDCLASSEX) ATOM {
@@ -3063,6 +3340,18 @@ func SetMenuInfo(hmenu HMENU, lpcmi *MENUINFO) bool {
 	return ret != 0
 }
 
+func SetMenuItemBitmaps(hMenu HMENU, uPosition uint32, uFlags uint32, hBitmapUnchecked HBITMAP, hBitmapChecked HBITMAP) bool {
+	ret, _, _ := syscall.Syscall6(setMenuItemBitmaps.Addr(), 5,
+		uintptr(hMenu),
+		uintptr(uPosition),
+		uintptr(uFlags),
+		uintptr(hBitmapUnchecked),
+		uintptr(hBitmapChecked),
+		0)
+
+	return ret != 0
+}
+
 func SetMenuItemInfo(hMenu HMENU, uItem uint32, fByPosition bool, lpmii *MENUITEMINFO) bool {
 	ret, _, _ := syscall.Syscall6(setMenuItemInfo.Addr(), 4,
 		uintptr(hMenu),
@@ -3212,6 +3501,21 @@ func TrackMouseEvent(lpEventTrack *TRACKMOUSEEVENT) bool {
 	return ret != 0
 }
 
+func TrackPopupMenu(hMenu HMENU, uFlags uint32, x, y int32, nReserved int32, hWnd HWND, prcRect *RECT) uint32 {
+	ret, _, _ := syscall.Syscall9(trackPopupMenu.Addr(), 7,
+		uintptr(hMenu),
+		uintptr(uFlags),
+		uintptr(x),
+		uintptr(y),
+		uintptr(nReserved),
+		uintptr(hWnd),
+		uintptr(unsafe.Pointer(prcRect)),
+		0,
+		0)
+
+	return uint32(ret)
+}
+
 func TrackPopupMenuEx(hMenu HMENU, fuFlags uint32, x, y int32, hWnd HWND, lptpm *TPMPARAMS) BOOL {
 	ret, _, _ := syscall.Syscall6(trackPopupMenuEx.Addr(), 6,
 		uintptr(hMenu),
@@ -3247,6 +3551,15 @@ func UpdateWindow(hwnd HWND) bool {
 	return ret != 0
 }
 
+func VkKeyScan(ch uint16) int16 {
+	ret, _, _ := syscall.Syscall(vkKeyScan.Addr(), 1,
+		uintptr(ch),
+		0,
+		0)
+
+	return int16(ret)
+}
+
 func WindowFromDC(hDC HDC) HWND {
 	ret, _, _ := syscall.Syscall(windowFromDC.Addr(), 1,
 		uintptr(hDC),
@@ -3263,4 +3576,150 @@ func WindowFromPoint(Point POINT) HWND {
 		0)
 
 	return HWND(ret)
+}
+
+const (
+	MSGF_USER = 4096
+)
+
+//sys CallMsgFilter(msg *MSG, nCode int32) (ret bool) = user32.CallMsgFilterW
+
+const (
+	QS_KEY            = 0x0001
+	QS_MOUSEMOVE      = 0x0002
+	QS_MOUSEBUTTON    = 0x0004
+	QS_POSTMESSAGE    = 0x0008
+	QS_TIMER          = 0x0010
+	QS_PAINT          = 0x0020
+	QS_SENDMESSAGE    = 0x0040
+	QS_HOTKEY         = 0x0080
+	QS_ALLPOSTMESSAGE = 0x0100
+	QS_RAWINPUT       = 0x0400
+	QS_TOUCH          = 0x0800
+	QS_POINTER        = 0x1000
+	QS_MOUSE          = QS_MOUSEMOVE | QS_MOUSEBUTTON
+	QS_INPUT          = QS_MOUSE | QS_KEY | QS_RAWINPUT | QS_TOUCH | QS_POINTER
+	QS_ALLEVENTS      = QS_INPUT | QS_POSTMESSAGE | QS_TIMER | QS_PAINT | QS_HOTKEY
+	QS_ALLINPUT       = QS_INPUT | QS_POSTMESSAGE | QS_TIMER | QS_PAINT | QS_HOTKEY | QS_SENDMESSAGE
+)
+
+//sys GetQueueStatus(flags uint32) (ret uint32) = user32.GetQueueStatus
+
+const (
+	MWMO_WAITALL        = 0x0001
+	MWMO_ALERTABLE      = 0x0002
+	MWMO_INPUTAVAILABLE = 0x0004
+)
+
+//sys MsgWaitForMultipleObjectsEx(count uint32, handles *windows.Handle, timeoutMillis uint32, wakeMask uint32, flags uint32) (ret uint32, err error) [failretval==windows.WAIT_FAILED] = user32.MsgWaitForMultipleObjectsEx
+
+const DLGWINDOWEXTRA = 30
+
+const WC_DIALOG ATOM = 0x8002
+
+//sys CreateDialogIndirectParam(instance HINSTANCE, template unsafe.Pointer, parent HWND, dlgProc uintptr, initParam uintptr) (ret HWND, err error) [failretval==0] = user32.CreateDialogIndirectParamW
+//sys DefDlgProc(hdlg HWND, msg uint32, wParam uintptr, lParam uintptr) (ret uintptr) = user32.DefDlgProcW
+//sys GetNextDlgTabItem(hdlg HWND, hctl HWND, previous bool) (ret HWND, err error) [failretval==0] = user32.GetNextDlgTabItem
+
+//sys SetWindowText(hwnd HWND, text *uint16) (err error) [int32(failretval)==0] = user32.SetWindowTextW
+//sys GetWindowText(hwnd HWND, text *uint16, maxCount int32) (ret int32) = user32.GetWindowTextW
+//sys GetWindowTextLength(hwnd HWND) (ret int32) = user32.GetWindowTextLengthW
+
+const (
+	ICON_SMALL  = 0
+	ICON_BIG    = 1
+	ICON_SMALL2 = 2
+)
+
+type FLASHWINFO_FLAGS uint32
+
+const (
+	FLASHW_STOP      FLASHWINFO_FLAGS = 0
+	FLASHW_CAPTION   FLASHWINFO_FLAGS = 1
+	FLASHW_TRAY      FLASHWINFO_FLAGS = 2
+	FLASHW_ALL       FLASHWINFO_FLAGS = FLASHW_CAPTION | FLASHW_TRAY
+	FLASHW_TIMER     FLASHWINFO_FLAGS = 4
+	FLASHW_TIMERNOFG FLASHWINFO_FLAGS = 0xC
+)
+
+type FLASHWINFO struct {
+	CbSize    uint32
+	Hwnd      HWND
+	Flags     FLASHWINFO_FLAGS
+	UCount    uint32
+	DWTimeout uint32
+}
+
+//sys FlashWindowEx(pfwi *FLASHWINFO) (ret bool) = user32.FlashWindowEx
+
+//sys CalculatePopupWindowPosition(anchorPoint *POINT, windowSize *SIZE, flags uint32, optionalExcludeRect *RECT, outPopupWindowPosition *RECT) (err error) [int32(failretval)==0] = user32.CalculatePopupWindowPosition
+
+type DPI_AWARENESS_CONTEXT windows.Handle
+
+const (
+	DPI_AWARENESS_CONTEXT_UNAWARE              = DPI_AWARENESS_CONTEXT(^uintptr(0))     // -1
+	DPI_AWARENESS_CONTEXT_SYSTEM_AWARE         = DPI_AWARENESS_CONTEXT(^uintptr(0) - 1) // -2
+	DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE    = DPI_AWARENESS_CONTEXT(^uintptr(0) - 2) // -3
+	DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = DPI_AWARENESS_CONTEXT(^uintptr(0) - 3) // -4
+	DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED    = DPI_AWARENESS_CONTEXT(^uintptr(0) - 4) // -5
+)
+
+var (
+	procGetAwarenessFromDpiAwarenessContext = moduser32.NewProc("GetAwarenessFromDpiAwarenessContext")
+	procGetWindowDpiAwarenessContext        = moduser32.NewProc("GetWindowDpiAwarenessContext")
+	procInheritWindowMonitor                = moduser32.NewProc("InheritWindowMonitor")
+	procIsValidDpiAwarenessContext          = moduser32.NewProc("IsValidDpiAwarenessContext")
+)
+
+func IsValidDpiAwarenessContext(value DPI_AWARENESS_CONTEXT) bool {
+	// We hand-rolled this binding because mkwinsyscall cannot properly generate
+	// a function that might not exist but whose implementation does not return a Go error.
+	if err := procIsValidDpiAwarenessContext.Find(); err != nil {
+		return false
+	}
+
+	result, _, _ := syscall.SyscallN(procIsValidDpiAwarenessContext.Addr(), uintptr(value))
+	return int32(result) != 0
+}
+
+func GetWindowDpiAwarenessContext(hwnd HWND) DPI_AWARENESS_CONTEXT {
+	// We hand-rolled this binding because mkwinsyscall cannot properly generate
+	// a function that might not exist but whose implementation does not return a Go error.
+	if err := procGetWindowDpiAwarenessContext.Find(); err != nil {
+		return 0
+	}
+
+	result, _, _ := syscall.SyscallN(procGetWindowDpiAwarenessContext.Addr(), uintptr(hwnd))
+	return DPI_AWARENESS_CONTEXT(result)
+}
+
+type DPI_AWARENESS int32
+
+const (
+	DPI_AWARENESS_INVALID           DPI_AWARENESS = -1
+	DPI_AWARENESS_UNAWARE           DPI_AWARENESS = 0
+	DPI_AWARENESS_SYSTEM_AWARE      DPI_AWARENESS = 1
+	DPI_AWARENESS_PER_MONITOR_AWARE DPI_AWARENESS = 2
+)
+
+func GetAwarenessFromDpiAwarenessContext(value DPI_AWARENESS_CONTEXT) DPI_AWARENESS {
+	// We hand-rolled this binding because mkwinsyscall cannot properly generate
+	// a function that might not exist but whose implementation does not return a Go error.
+	if err := procGetAwarenessFromDpiAwarenessContext.Find(); err != nil {
+		return DPI_AWARENESS_INVALID
+	}
+
+	result, _, _ := syscall.SyscallN(procGetAwarenessFromDpiAwarenessContext.Addr(), uintptr(value))
+	return DPI_AWARENESS(result)
+}
+
+func InheritWindowMonitor(hwnd, hwndInherit HWND) bool {
+	// We hand-rolled this binding because mkwinsyscall cannot properly generate
+	// a function that might not exist but whose implementation does not return a Go error.
+	if err := procInheritWindowMonitor.Find(); err != nil {
+		return false
+	}
+
+	result, _, _ := syscall.SyscallN(procInheritWindowMonitor.Addr(), uintptr(hwnd), uintptr(hwndInherit))
+	return int32(result) != 0
 }

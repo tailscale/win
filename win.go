@@ -2,13 +2,17 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package win
 
 import (
-	"syscall"
+	"math"
 	"unsafe"
+
+	"golang.org/x/exp/constraints"
+	"golang.org/x/sys/windows"
 )
 
 const (
@@ -70,14 +74,18 @@ func HIWORD(dw uint32) uint16 {
 }
 
 func UTF16PtrToString(s *uint16) string {
-	if s == nil {
-		return ""
-	}
-	return syscall.UTF16ToString((*[1 << 29]uint16)(unsafe.Pointer(s))[0:])
+	return windows.UTF16PtrToString(s)
 }
 
-func MAKEINTRESOURCE(id uintptr) *uint16 {
-	return (*uint16)(unsafe.Pointer(id))
+func MAKEINTRESOURCE[ID constraints.Integer](id ID) *uint16 {
+	if id < 0 || int64(id) > math.MaxUint16 {
+		panic("resource id out of uint16 range")
+	}
+	return (*uint16)(unsafe.Pointer(uintptr(id)))
+}
+
+func MAKEINTATOM(atom ATOM) *uint16 {
+	return MAKEINTRESOURCE(atom)
 }
 
 func BoolToBOOL(value bool) BOOL {

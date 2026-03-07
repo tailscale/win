@@ -2,14 +2,17 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package win
 
 import (
-	"golang.org/x/sys/windows"
+	"runtime"
 	"syscall"
 	"unsafe"
+
+	"golang.org/x/sys/windows"
 )
 
 const MAX_PATH = 260
@@ -75,6 +78,7 @@ var (
 	getProfileString                   *windows.LazyProc
 	getThreadLocale                    *windows.LazyProc
 	getThreadUILanguage                *windows.LazyProc
+	getTickCount64                     *windows.LazyProc
 	getVersion                         *windows.LazyProc
 	globalAlloc                        *windows.LazyProc
 	globalFree                         *windows.LazyProc
@@ -161,6 +165,7 @@ func init() {
 	getProfileString = libkernel32.NewProc("GetProfileStringW")
 	getThreadLocale = libkernel32.NewProc("GetThreadLocale")
 	getThreadUILanguage = libkernel32.NewProc("GetThreadUILanguage")
+	getTickCount64 = libkernel32.NewProc("GetTickCount64")
 	getVersion = libkernel32.NewProc("GetVersion")
 	globalAlloc = libkernel32.NewProc("GlobalAlloc")
 	globalFree = libkernel32.NewProc("GlobalFree")
@@ -449,3 +454,15 @@ func SystemTimeToFileTime(lpSystemTime *SYSTEMTIME, lpFileTime *FILETIME) bool {
 
 	return ret != 0
 }
+
+func GetTickCount64() uint64 {
+	if runtime.GOARCH == "386" {
+		r0, r1, _ := syscall.SyscallN(getTickCount64.Addr())
+		return uint64(r0) | (uint64(r1) << 32)
+	}
+
+	r0, _, _ := syscall.SyscallN(getTickCount64.Addr())
+	return uint64(r0)
+}
+
+//sys SwitchToThread() (ret bool) = kernel32.SwitchToThread

@@ -3,8 +3,14 @@ About win
 
 win is a Windows API wrapper package for Go.
 
-Originally part of [walk](https://github.com/lxn/walk), it is now a separate
-project.
+Fork from original module
+=========================
+
+This is a fork from the [original module](https://github.com/lxn/win).
+
+As of this writing, a [PR](https://github.com/lxn/win/pull/123) is under review
+for adding the necessary API support. Once that PR merges, we can discontinue
+this fork.
 
 Setup
 =====

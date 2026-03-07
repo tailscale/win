@@ -2,6 +2,7 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package win
@@ -15,6 +16,23 @@ import (
 
 type CSIDL uint32
 type HDROP HANDLE
+
+// SHAppBarMessage flags
+const (
+	ABM_NEW              = 0x00000000
+	ABM_REMOVE           = 0x00000001
+	ABM_QUERYPOS         = 0x00000002
+	ABM_SETPOS           = 0x00000003
+	ABM_GETSTATE         = 0x00000004
+	ABM_GETTASKBARPOS    = 0x00000005
+	ABM_ACTIVATE         = 0x00000006
+	ABM_GETAUTOHIDEBAR   = 0x00000007
+	ABM_SETAUTOHIDEBAR   = 0x00000008
+	ABM_WINDOWPOSCHANGED = 0x00000009
+	ABM_SETSTATE         = 0x0000000A
+	ABM_GETAUTOHIDEBAREX = 0x0000000B
+	ABM_SETAUTOHIDEBAREX = 0x0000000C
+)
 
 const (
 	CSIDL_DESKTOP                 = 0x00
@@ -310,6 +328,15 @@ const (
 	DE_ERROR_MAX        = 0xB7 // MAX_PATH was exceeded during the operation.
 )
 
+type APPBARDATA struct {
+	CbSize           uint32
+	HWnd             HWND
+	UCallbackMessage uint32
+	UEdge            uint32
+	Rc               RECT
+	LParam           uintptr
+}
+
 type NOTIFYICONDATA struct {
 	CbSize           uint32
 	HWnd             HWND
@@ -326,6 +353,13 @@ type NOTIFYICONDATA struct {
 	DwInfoFlags      uint32
 	GuidItem         syscall.GUID
 	HBalloonIcon     HICON
+}
+
+type NOTIFYICONIDENTIFIER struct {
+	CbSize   uint32
+	HWnd     HWND
+	UID      uint32
+	GuidItem syscall.GUID
 }
 
 type SHFILEINFO struct {
@@ -371,20 +405,21 @@ var (
 	libshell32 *windows.LazyDLL
 
 	// Functions
-	dragAcceptFiles        *windows.LazyProc
-	dragFinish             *windows.LazyProc
-	dragQueryFile          *windows.LazyProc
-	extractIcon            *windows.LazyProc
-	shBrowseForFolder      *windows.LazyProc
-	shDefExtractIcon       *windows.LazyProc
-	shGetFileInfo          *windows.LazyProc
-	shGetPathFromIDList    *windows.LazyProc
-	shGetSpecialFolderPath *windows.LazyProc
-	shParseDisplayName     *windows.LazyProc
-	shGetStockIconInfo     *windows.LazyProc
-	shellExecute           *windows.LazyProc
-	shell_NotifyIcon       *windows.LazyProc
-	shFileOperation        *windows.LazyProc
+	dragAcceptFiles         *windows.LazyProc
+	dragFinish              *windows.LazyProc
+	dragQueryFile           *windows.LazyProc
+	extractIcon             *windows.LazyProc
+	shAppBarMessage         *windows.LazyProc
+	shBrowseForFolder       *windows.LazyProc
+	shDefExtractIcon        *windows.LazyProc
+	shGetFileInfo           *windows.LazyProc
+	shGetPathFromIDList     *windows.LazyProc
+	shGetSpecialFolderPath  *windows.LazyProc
+	shParseDisplayName      *windows.LazyProc
+	shGetStockIconInfo      *windows.LazyProc
+	shellExecute            *windows.LazyProc
+	shell_NotifyIcon        *windows.LazyProc
+	shell_NotifyIconGetRect *windows.LazyProc
 )
 
 func init() {
@@ -396,6 +431,7 @@ func init() {
 	dragFinish = libshell32.NewProc("DragFinish")
 	dragQueryFile = libshell32.NewProc("DragQueryFileW")
 	extractIcon = libshell32.NewProc("ExtractIconW")
+	shAppBarMessage = libshell32.NewProc("SHAppBarMessage")
 	shBrowseForFolder = libshell32.NewProc("SHBrowseForFolderW")
 	shDefExtractIcon = libshell32.NewProc("SHDefExtractIconW")
 	shGetFileInfo = libshell32.NewProc("SHGetFileInfoW")
@@ -404,6 +440,7 @@ func init() {
 	shGetStockIconInfo = libshell32.NewProc("SHGetStockIconInfo")
 	shellExecute = libshell32.NewProc("ShellExecuteW")
 	shell_NotifyIcon = libshell32.NewProc("Shell_NotifyIconW")
+	shell_NotifyIconGetRect = libshell32.NewProc("Shell_NotifyIconGetRect")
 	shParseDisplayName = libshell32.NewProc("SHParseDisplayName")
 	shFileOperation = libshell32.NewProc("SHFileOperationW")
 }
@@ -443,6 +480,15 @@ func ExtractIcon(hInst HINSTANCE, exeFileName *uint16, iconIndex int32) HICON {
 		uintptr(iconIndex))
 
 	return HICON(ret)
+}
+
+func SHAppBarMessage(dwMessage uint32, pData *APPBARDATA) uintptr {
+	ret, _, _ := syscall.Syscall(shAppBarMessage.Addr(), 2,
+		uintptr(dwMessage),
+		uintptr(unsafe.Pointer(pData)),
+		0)
+
+	return ret
 }
 
 func SHBrowseForFolder(lpbi *BROWSEINFO) uintptr {
@@ -544,7 +590,15 @@ func Shell_NotifyIcon(dwMessage uint32, lpdata *NOTIFYICONDATA) bool {
 		uintptr(unsafe.Pointer(lpdata)),
 		0)
 
-	return ret != 0
+	return int32(ret) != 0
+}
+
+func Shell_NotifyIconGetRect(identifier *NOTIFYICONIDENTIFIER, iconLocation *RECT) HRESULT {
+	ret, _, _ := syscall.SyscallN(shell_NotifyIconGetRect.Addr(),
+		uintptr(unsafe.Pointer(identifier)),
+		uintptr(unsafe.Pointer(iconLocation)))
+
+	return HRESULT(ret)
 }
 
 func SHFileOperation(lpFileOp *SHFILEOPSTRUCT) HRESULT {

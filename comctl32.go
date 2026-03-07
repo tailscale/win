@@ -2,11 +2,16 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:build windows
 // +build windows
 
 package win
 
 import (
+	"bytes"
+	"encoding/binary"
+	"fmt"
+	"reflect"
 	"syscall"
 	"unsafe"
 
@@ -120,6 +125,13 @@ const (
 	PBM_SETBKCOLOR  = CCM_SETBKCOLOR
 )
 
+// ProgressBar states
+const (
+	PBST_NORMAL = 0x0001
+	PBST_ERROR  = 0x0002
+	PBST_PAUSED = 0x0003
+)
+
 // ProgressBar styles
 const (
 	PBS_SMOOTH   = 0x01
@@ -160,6 +172,19 @@ const (
 	ILC_PALETTE       = 0x00000800
 	ILC_MIRROR        = 0x00002000
 	ILC_PERITEMMIRROR = 0x00008000
+)
+
+// ImageList_Draw[Ex] flags
+const (
+	ILD_NORMAL      = 0x00000000
+	ILD_TRANSPARENT = 0x00000001
+	ILD_BLEND25     = 0x00000002
+	ILD_BLEND50     = 0x00000004
+	ILD_MASK        = 0x00000010
+	ILD_IMAGE       = 0x00000020
+	ILD_SELECTED    = ILD_BLEND50
+	ILD_FOCUS       = ILD_BLEND25
+	ILD_BLEND       = ILD_BLEND50
 )
 
 // LoadIconMetric flags
@@ -210,6 +235,13 @@ const (
 )
 
 const (
+	LVIR_BOUNDS       = 0
+	LVIR_ICON         = 1
+	LVIR_LABEL        = 2
+	LVIR_SELECTBOUNDS = 3
+)
+
+const (
 	LPSTR_TEXTCALLBACK = ^uintptr(0)
 	I_CHILDRENCALLBACK = -1
 	I_IMAGECALLBACK    = -1
@@ -233,14 +265,12 @@ type NMCUSTOMDRAW struct {
 }
 
 var (
-	// Library
-	libcomctl32 *windows.LazyDLL
-
 	// Functions
 	imageList_Add         *windows.LazyProc
 	imageList_AddMasked   *windows.LazyProc
 	imageList_Create      *windows.LazyProc
 	imageList_Destroy     *windows.LazyProc
+	imageList_DrawEx      *windows.LazyProc
 	imageList_ReplaceIcon *windows.LazyProc
 	initCommonControlsEx  *windows.LazyProc
 	loadIconMetric        *windows.LazyProc
@@ -248,25 +278,16 @@ var (
 )
 
 func init() {
-	// Library
-	libcomctl32 = windows.NewLazySystemDLL("comctl32.dll")
-
 	// Functions
-	imageList_Add = libcomctl32.NewProc("ImageList_Add")
-	imageList_AddMasked = libcomctl32.NewProc("ImageList_AddMasked")
-	imageList_Create = libcomctl32.NewProc("ImageList_Create")
-	imageList_Destroy = libcomctl32.NewProc("ImageList_Destroy")
-	imageList_ReplaceIcon = libcomctl32.NewProc("ImageList_ReplaceIcon")
-	initCommonControlsEx = libcomctl32.NewProc("InitCommonControlsEx")
-	loadIconMetric = libcomctl32.NewProc("LoadIconMetric")
-	loadIconWithScaleDown = libcomctl32.NewProc("LoadIconWithScaleDown")
-
-	// Initialize the common controls we support
-	var initCtrls INITCOMMONCONTROLSEX
-	initCtrls.DwSize = uint32(unsafe.Sizeof(initCtrls))
-	initCtrls.DwICC = ICC_LINK_CLASS | ICC_LISTVIEW_CLASSES | ICC_PROGRESS_CLASS | ICC_TAB_CLASSES | ICC_TREEVIEW_CLASSES
-
-	InitCommonControlsEx(&initCtrls)
+	imageList_Add = modcomctl32.NewProc("ImageList_Add")
+	imageList_AddMasked = modcomctl32.NewProc("ImageList_AddMasked")
+	imageList_Create = modcomctl32.NewProc("ImageList_Create")
+	imageList_Destroy = modcomctl32.NewProc("ImageList_Destroy")
+	imageList_DrawEx = modcomctl32.NewProc("ImageList_DrawEx")
+	imageList_ReplaceIcon = modcomctl32.NewProc("ImageList_ReplaceIcon")
+	initCommonControlsEx = modcomctl32.NewProc("InitCommonControlsEx")
+	loadIconMetric = modcomctl32.NewProc("LoadIconMetric")
+	loadIconWithScaleDown = modcomctl32.NewProc("LoadIconWithScaleDown")
 }
 
 func ImageList_Add(himl HIMAGELIST, hbmImage, hbmMask HBITMAP) int32 {
@@ -302,6 +323,24 @@ func ImageList_Create(cx, cy int32, flags uint32, cInitial, cGrow int32) HIMAGEL
 func ImageList_Destroy(hIml HIMAGELIST) bool {
 	ret, _, _ := syscall.Syscall(imageList_Destroy.Addr(), 1,
 		uintptr(hIml),
+		0,
+		0)
+
+	return ret != 0
+}
+
+func ImageList_DrawEx(himl HIMAGELIST, i int32, hdcDst HDC, x, y, dx, dy int32, rgbBk COLORREF, rgbFg COLORREF, fStyle uint32) bool {
+	ret, _, _ := syscall.Syscall12(imageList_DrawEx.Addr(), 10,
+		uintptr(himl),
+		uintptr(i),
+		uintptr(hdcDst),
+		uintptr(x),
+		uintptr(y),
+		uintptr(dx),
+		uintptr(dy),
+		uintptr(rgbBk),
+		uintptr(rgbFg),
+		uintptr(fStyle),
 		0,
 		0)
 
@@ -355,3 +394,190 @@ func LoadIconWithScaleDown(hInstance HINSTANCE, lpIconName *uint16, w int32, h i
 
 	return HRESULT(ret)
 }
+
+type TASKDIALOG_FLAGS uint32
+
+const (
+	TDF_ENABLE_HYPERLINKS           TASKDIALOG_FLAGS = 0x0001
+	TDF_USE_HICON_MAIN              TASKDIALOG_FLAGS = 0x0002
+	TDF_USE_HICON_FOOTER            TASKDIALOG_FLAGS = 0x0004
+	TDF_ALLOW_DIALOG_CANCELLATION   TASKDIALOG_FLAGS = 0x0008
+	TDF_USE_COMMAND_LINKS           TASKDIALOG_FLAGS = 0x0010
+	TDF_USE_COMMAND_LINKS_NO_ICON   TASKDIALOG_FLAGS = 0x0020
+	TDF_EXPAND_FOOTER_AREA          TASKDIALOG_FLAGS = 0x0040
+	TDF_EXPANDED_BY_DEFAULT         TASKDIALOG_FLAGS = 0x0080
+	TDF_VERIFICATION_FLAG_CHECKED   TASKDIALOG_FLAGS = 0x0100
+	TDF_SHOW_PROGRESS_BAR           TASKDIALOG_FLAGS = 0x0200
+	TDF_SHOW_MARQUEE_PROGRESS_BAR   TASKDIALOG_FLAGS = 0x0400
+	TDF_CALLBACK_TIMER              TASKDIALOG_FLAGS = 0x0800
+	TDF_POSITION_RELATIVE_TO_WINDOW TASKDIALOG_FLAGS = 0x1000
+	TDF_RTL_LAYOUT                  TASKDIALOG_FLAGS = 0x2000
+	TDF_NO_DEFAULT_RADIO_BUTTON     TASKDIALOG_FLAGS = 0x4000
+	TDF_CAN_BE_MINIMIZED            TASKDIALOG_FLAGS = 0x8000
+	TDF_NO_SET_FOREGROUND           TASKDIALOG_FLAGS = 0x00010000
+	TDF_SIZE_TO_CONTENT             TASKDIALOG_FLAGS = 0x01000000
+)
+
+const (
+	TDM_NAVIGATE_PAGE                       = WM_USER + 101
+	TDM_CLICK_BUTTON                        = WM_USER + 102
+	TDM_SET_MARQUEE_PROGRESS_BAR            = WM_USER + 103
+	TDM_SET_PROGRESS_BAR_STATE              = WM_USER + 104
+	TDM_SET_PROGRESS_BAR_RANGE              = WM_USER + 105
+	TDM_SET_PROGRESS_BAR_POS                = WM_USER + 106
+	TDM_SET_PROGRESS_BAR_MARQUEE            = WM_USER + 107
+	TDM_SET_ELEMENT_TEXT                    = WM_USER + 108
+	TDM_CLICK_RADIO_BUTTON                  = WM_USER + 110
+	TDM_ENABLE_BUTTON                       = WM_USER + 111
+	TDM_ENABLE_RADIO_BUTTON                 = WM_USER + 112
+	TDM_CLICK_VERIFICATION                  = WM_USER + 113
+	TDM_UPDATE_ELEMENT_TEXT                 = WM_USER + 114
+	TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE = WM_USER + 115
+	TDM_UPDATE_ICON                         = WM_USER + 116
+)
+
+const (
+	TDN_CREATED                = 0
+	TDN_NAVIGATED              = 1
+	TDN_BUTTON_CLICKED         = 2
+	TDN_HYPERLINK_CLICKED      = 3
+	TDN_TIMER                  = 4
+	TDN_DESTROYED              = 5
+	TDN_RADIO_BUTTON_CLICKED   = 6
+	TDN_DIALOG_CONSTRUCTED     = 7
+	TDN_VERIFICATION_CLICKED   = 8
+	TDN_HELP                   = 9
+	TDN_EXPANDO_BUTTON_CLICKED = 10
+)
+
+// TASKDIALOG_BUTTON_UNPACKED is nearly identical to TASKDIALOG_BUTTON in the Windows
+// SDK, except for the fact that that the SDK version is packed. Since Go cannot
+// grok that, we implement a Pack method on this struct to encode its contents
+// correctly for Windows.
+type TASKDIALOG_BUTTON_UNPACKED struct {
+	ButtonID   int32
+	ButtonText *uint16
+}
+
+// TASKDIALOG_BUTTON is opaque because it is a packed data structure.
+// Use (*TASKDIALOG_BUTTON_UNPACKED).Pack() to write one to a bytes.Buffer.
+type TASKDIALOG_BUTTON struct {
+	_ [sizeTASKDIALOG_BUTTON]byte
+}
+
+// Pack writes the contents of u to buf in a packed format. We use a Buffer
+// because walk encodes TASKDIALOG_BUTTONs from a slice.
+func (u *TASKDIALOG_BUTTON_UNPACKED) Pack(buf *bytes.Buffer) error {
+	if err := binary.Write(buf, packByteOrder, u.ButtonID); err != nil {
+		return err
+	}
+	return binary.Write(buf, packByteOrder, packPtr(uintptr(unsafe.Pointer(u.ButtonText))))
+}
+
+type TASKDIALOG_ELEMENTS int32
+
+const (
+	TDE_CONTENT              TASKDIALOG_ELEMENTS = 0
+	TDE_EXPANDED_INFORMATION TASKDIALOG_ELEMENTS = 1
+	TDE_FOOTER               TASKDIALOG_ELEMENTS = 2
+	TDE_MAIN_INSTRUCTION     TASKDIALOG_ELEMENTS = 3
+)
+
+type TASKDIALOG_ICON_ELEMENTS int32
+
+const (
+	TDIE_ICON_MAIN   TASKDIALOG_ICON_ELEMENTS = 0
+	TDIE_ICON_FOOTER TASKDIALOG_ICON_ELEMENTS = 1
+)
+
+const (
+	TD_WARNING_ICON     uintptr = 0xFFFF
+	TD_ERROR_ICON       uintptr = 0xFFFE
+	TD_INFORMATION_ICON uintptr = 0xFFFD
+	TD_SHIELD_ICON      uintptr = 0xFFFC
+)
+
+type TASKDIALOG_COMMON_BUTTON_FLAGS uint32
+
+const (
+	TDCBF_OK_BUTTON     TASKDIALOG_COMMON_BUTTON_FLAGS = 0x0001
+	TDCBF_YES_BUTTON    TASKDIALOG_COMMON_BUTTON_FLAGS = 0x0002
+	TDCBF_NO_BUTTON     TASKDIALOG_COMMON_BUTTON_FLAGS = 0x0004
+	TDCBF_CANCEL_BUTTON TASKDIALOG_COMMON_BUTTON_FLAGS = 0x0008
+	TDCBF_RETRY_BUTTON  TASKDIALOG_COMMON_BUTTON_FLAGS = 0x0010
+	TDCBF_CLOSE_BUTTON  TASKDIALOG_COMMON_BUTTON_FLAGS = 0x0020
+)
+
+// TASKDIALOGCONFIG_UNPACKED is nearly identical to TASKDIALOGCONFIG in the
+// Windows SDK, except that the cbSize field is omitted and for the fact that
+// the SDK version is packed. Since Go cannot grok packed structs, we implement
+// a Pack method on this struct to encode its contents correctly for Windows.
+type TASKDIALOGCONFIG_UNPACKED struct {
+	HWNDParent           HWND
+	HInstance            HINSTANCE
+	Flags                TASKDIALOG_FLAGS
+	CommonButtons        TASKDIALOG_COMMON_BUTTON_FLAGS
+	WindowTitle          *uint16
+	MainIcon             uintptr
+	MainInstruction      *uint16
+	Content              *uint16
+	CButtons             uint32
+	PButtons             *TASKDIALOG_BUTTON
+	DefaultButton        int32
+	CRadioButtons        uint32
+	PRadioButtons        *TASKDIALOG_BUTTON
+	DefaultRadioButton   int32
+	VerificationText     *uint16
+	ExpandedInformation  *uint16
+	ExpandedControlText  *uint16
+	CollapsedControlText *uint16
+	FooterIcon           uintptr
+	Footer               *uint16
+	Callback             uintptr
+	CallbackData         uintptr
+	Width                uint32
+}
+
+// TASKDIALOGCONFIG is opaque because it is a packed data structure.
+// Use (*TASKDIALOGCONFIG_UNPACKED).Pack() to obtain one.
+type TASKDIALOGCONFIG struct {
+	_ [sizeTASKDIALOGCONFIG]byte
+}
+
+// Pack takes the contents of u and writes them in a packed format to a
+// TASKDIALOGCONFIG, which is returned as the result.
+func (u *TASKDIALOGCONFIG_UNPACKED) Pack() *TASKDIALOGCONFIG {
+	buf := bytes.NewBuffer(make([]byte, 0, sizeTASKDIALOGCONFIG))
+
+	v := reflect.ValueOf(u).Elem()
+
+	// Write the actual packed size as the cbSize field.
+	binary.Write(buf, packByteOrder, uint32(sizeTASKDIALOGCONFIG))
+
+	for i, n := 0, v.NumField(); i < n; i++ {
+		fv := v.Field(i)
+		switch fv.Type().Kind() {
+		case reflect.Pointer:
+			if err := binary.Write(buf, packByteOrder, packPtr(uintptr(fv.UnsafePointer()))); err != nil {
+				panic(err)
+			}
+		case reflect.Uintptr:
+			if err := binary.Write(buf, packByteOrder, packPtr(fv.Uint())); err != nil {
+				panic(err)
+			}
+		default:
+			if err := binary.Write(buf, packByteOrder, fv.Interface()); err != nil {
+				panic(err)
+			}
+		}
+	}
+
+	bb := buf.Bytes()
+	if len(bb) != sizeTASKDIALOGCONFIG {
+		panic(fmt.Sprintf("(*TASKDIALOGCONFIG_UNPACKED).Pack() invalid size: got %d, want %d", len(bb), sizeTASKDIALOGCONFIG))
+	}
+
+	return (*TASKDIALOGCONFIG)(unsafe.Pointer(&bb[0]))
+}
+
+//sys TaskDialogIndirect(pTaskConfig *TASKDIALOGCONFIG, pnButton *int32, pnRadioButton *int32, pfVerificationFlagChecked *BOOL) (ret HRESULT) = comctl32.TaskDialogIndirect
