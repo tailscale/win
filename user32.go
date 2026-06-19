@@ -3723,3 +3723,11 @@ func InheritWindowMonitor(hwnd, hwndInherit HWND) bool {
 	result, _, _ := syscall.SyscallN(procInheritWindowMonitor.Addr(), uintptr(hwnd), uintptr(hwndInherit))
 	return int32(result) != 0
 }
+
+//sys GetDoubleClickTime() (ret uint32) = user32.GetDoubleClickTime
+//sys GetMessageTime() (ret int32) = user32.GetMessageTime
+
+const (
+	USER_TIMER_MINIMUM = 0x0000000A
+	USER_TIMER_MAXIMUM = 0x7FFFFFFF
+)
